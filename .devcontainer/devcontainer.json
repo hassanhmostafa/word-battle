@@ -1,0 +1,18 @@
+{
+    "name": "Flask + Angular Dev Container",
+    "dockerComposeFile": ["../docker-compose.yml"],
+    "service": "backend",  
+    "workspaceFolder": "/app",
+    "forwardPorts": [5001, 4200],
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-python.python",
+          "ms-toolsai.jupyter",
+          "esbenp.prettier-vscode",
+          "angular.ng-template"
+        ]
+      }
+    }
+  }
+  

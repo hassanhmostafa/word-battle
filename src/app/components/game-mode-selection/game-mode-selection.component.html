@@ -1,0 +1,39 @@
+<div class="mode-selection">
+  <h2 class="title">Start Game</h2>
+  <p class="game-info">
+    The game will automatically guide you through each round: you'll describe a
+    word for the AI to guess, then the AI will describe a word for you.
+  </p>
+
+  <!-- ✅ REMOVED: Difficulty Selection - Game now adapts automatically -->
+  <div class="game-info-title">
+    <h3>🎯 Adaptive Difficulty System</h3>
+    <p class="game-info">
+      The game starts at an <strong>easy level</strong> and automatically adjusts based on your performance. 
+      Do well and the difficulty increases; struggle and it gets easier. 
+      The AI referee tracks your progress and ensures a balanced challenge!
+    </p>
+  </div>
+
+  <div class="features">
+    <div>
+      <strong class="feature-name">🤖 AI Referee</strong>
+      <p class="game-info">Validates descriptions and ensures fair play</p>
+    </div>
+    <div>
+      <strong class="feature-name">📈 Smart Progression</strong>
+      <p class="game-info">Difficulty adapts to your skill level</p>
+    </div>
+    <div>
+      <strong class="feature-name">🎮 18 Rounds</strong>
+      <p class="game-info">Complete game session with performance tracking</p>
+    </div>
+  </div>
+
+  <button 
+    (click)="startGame()" 
+    class="start-button"
+  >
+    Begin Game
+  </button>
+</div>

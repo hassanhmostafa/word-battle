@@ -1,0 +1,162 @@
+.mode-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 40px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+p {
+  font-size: 1.1rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 40px;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+/* Difficulty Selection Styles */
+.difficulty-selection {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.difficulty-selection h3 {
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.difficulty-cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.difficulty-card {
+  flex: 1;
+  min-width: 220px;
+  max-width: 280px;
+  padding: 30px 20px;
+  border: 3px solid #e0e0e0;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.difficulty-card:hover {
+  border-color: #667eea;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
+}
+
+.difficulty-card.selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  transform: translateY(-4px);
+}
+
+.difficulty-card.selected .difficulty-description {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.difficulty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 15px;
+}
+
+.difficulty-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.difficulty-description {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Button Styles */
+button {
+  padding: 16px 50px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  margin-top: 20px;
+}
+
+button:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+button:active:not(.disabled) {
+  transform: translateY(0);
+}
+
+button.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .difficulty-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .difficulty-card {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}
+
+.game-info {
+  color: white;
+}
+
+.game-info-title {
+  color: aqua;
+}
+.feature-name{
+  color: #6b78db;
+}
+.title{
+  color: aqua;
+}

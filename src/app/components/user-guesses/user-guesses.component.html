@@ -1,0 +1,92 @@
+<div class="user-guess__container">
+  <app-category
+    *ngIf="currentCategory === ''"
+    [categoryUsage]="categoryUsage"
+    (categorySelected)="onCategorySelected($event)"
+  ></app-category>
+
+  <ng-container *ngIf="currentCategory !== ''">
+    <app-game-header
+      [username]="username"
+      [round]="roundNumber"
+      [difficulty]="currentDifficulty"
+      [correctAnswers]="gameService.userStats.correct"
+      [wrongAnswers]="gameService.userStats.wrong"
+      [userTimeLeft]="userGuessTimeLeft"
+      [aiTimeLeft]="aiGuessTimeLeft"
+      [currentCategory]="currentCategory"
+      [aiStats]="gameService.aiStats"
+      [userStats]="gameService.userStats"
+      [wrongGuesses]="localWrongGuesses"
+    ></app-game-header>
+
+    <!-- AI Commentary — TOP BUBBLE -->
+    <div *ngIf="commentaryMessage" class="commentary-bubble" [ngClass]="commentaryType">
+      <span class="commentary-icon">🎙️</span>
+      <span class="commentary-text">{{ commentaryMessage }}</span>
+    </div>
+    <!-- AI Commentary — INLINE under feedback -->
+    <div *ngIf="feedbackCommentary" class="feedback-commentary" [ngClass]="feedbackCommentaryType">
+      🎙️ {{ feedbackCommentary }}
+    </div>
+
+    <div *ngIf="isLoading" class="ai-loading">
+      <span class="spinner"></span> Give me a minute, I'm thinking...
+    </div>
+
+    <!-- Word description -->
+    <div [hidden]="isLoading" *ngIf="!gameOver" class="description">
+      {{ description }}
+    </div>
+
+    <!-- Skip button -->
+    <div [hidden]="isLoading || localWrongGuesses >= 3" class="skip-container">
+      <button class="skip-button" (click)="handleSkip()">
+        <i class="fa-solid fa-rotate"></i> Change Word
+      </button>
+    </div>
+
+    <!-- Guess input -->
+    <div *ngIf="!gameOver" class="guess-input">
+      <input
+        [(ngModel)]="userGuess"
+        placeholder="Enter your guess"
+        (keyup.enter)="submitGuess()"
+      />
+    </div>
+
+    <!-- Buttons -->
+    <div *ngIf="!gameOver" class="button-row">
+      <button
+        class="submit-button"
+        [disabled]="isLoading || localWrongGuesses >= 3 || isSubmitting || roundEnded"
+        (click)="submitGuess()"
+      >
+        {{ 'Submit Guess' }}
+      </button>
+      <button
+        class="hint-button"
+        (click)="getHint()"
+        [disabled]="hints.length >= 1 || localWrongGuesses !== 2 || hintUsed > 0"
+        title="Up to 3 hints. Each costs 5 seconds."
+      >
+        Get Hint (-2 seconds)
+      </button>
+    </div>
+
+    <!-- Feedback (Correct / Wrong) -->
+    <div
+      *ngIf="feedback"
+      class="feedback hint-style"
+      [ngClass]="isCorrect ? 'correct' : 'incorrect'"
+    >
+      {{ feedback }}
+    </div>
+
+  </ng-container>
+
+  <!-- Back button -->
+  <div class="back-button">
+    <button (click)="goBack()">Back to Start</button>
+  </div>
+</div>

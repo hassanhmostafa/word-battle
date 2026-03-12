@@ -1,0 +1,38 @@
+.category-select{
+  label {
+    color: #d3d3d3;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    display: block;
+  }
+  ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  cursor: pointer;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  border: 1px solid #04ffcc;
+  background-color: #0d172a;
+  color: #d3d3d3;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    color: #04ffcc;
+  }
+  
+
+
+  .category-done {
+    background-color: #d9f99d !important; /* light green */
+    font-weight: bold;
+  }
+}
+} 
+
+
+

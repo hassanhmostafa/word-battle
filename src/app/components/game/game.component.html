@@ -1,0 +1,34 @@
+<div
+  class="game-container"
+  style="max-width: 900px; margin: auto; margin-top: 12.5rem; padding: 2rem"
+>
+  <ng-container *ngIf="!isUserGuess">
+    <app-ai-guesses
+      [roundNumber]="roundNumber"
+      (roundCompleted)="nextRound()"
+      [userGuessTimeLeft]="gameService.userGuessTimeLeft"
+      [aiGuessTimeLeft]="gameService.aiGuessTimeLeft"
+      (timerChanged)="onTimerChanged($event)"
+      [currentDifficulty]="currentDifficulty"
+      (gameOverEvent)="onGameOver()"
+      [currentCategory]="currentAICategory"
+      [isAiGuessMode]="true"
+      (difficultyChanged)="updateDifficulty($event)"
+    ></app-ai-guesses>
+  </ng-container>
+
+  <ng-container *ngIf="isUserGuess">
+    <app-user-guesses
+      [roundNumber]="roundNumber"
+      [categoryUsage]="userGuessCategoryUsage"
+      [userGuessTimeLeft]="gameService.userGuessTimeLeft"
+      [aiGuessTimeLeft]="gameService.aiGuessTimeLeft"
+      (roundCompleted)="nextRound()"
+      (timerChanged)="onTimerChanged($event)"
+      [currentDifficulty]="currentDifficulty"
+      (gameOverEvent)="onGameOver()"
+      [isAiGuessMode]="false"
+      (difficultyChanged)="updateDifficulty($event)"
+    ></app-user-guesses>
+  </ng-container>
+</div>

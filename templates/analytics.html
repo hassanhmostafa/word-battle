@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Battle — Analytics Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: #31ceb0;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      font-size: 0.85rem;
+      margin-bottom: 32px;
+    }
+    .refresh-btn {
+      display: block;
+      margin: 0 auto 28px;
+      padding: 8px 24px;
+      background: #31ceb0;
+      color: #0f172a;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .refresh-btn:hover { background: #22d3b8; }
+
+    /* ── Overview cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 18px 14px;
+      text-align: center;
+      border: 1px solid #334155;
+    }
+    .card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #31ceb0;
+    }
+    .card .label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Section layout ── */
+    .section { margin-bottom: 36px; }
+    .section h2 {
+      font-size: 1rem;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 6px;
+    }
+
+    /* ── Charts grid ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .chart-box {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 16px;
+      border: 1px solid #334155;
+    }
+    .chart-box h3 {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .chart-box canvas { max-height: 220px; }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th {
+      background: #1e293b;
+      color: #38bdf8;
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #1e293b;
+      color: #cbd5e1;
+    }
+    tr:hover td { background: #1e293b55; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-user  { background: #065f46; color: #6ee7b7; }
+    .badge-ai    { background: #1e3a5f; color: #7dd3fc; }
+    .badge-tie   { background: #3b2f00; color: #fbbf24; }
+    .badge-timeout { background: #4c1d1d; color: #fca5a5; }
+    .badge-win   { background: #065f46; color: #6ee7b7; }
+    .badge-loss  { background: #4c1d1d; color: #fca5a5; }
+
+    #loading {
+      text-align: center;
+      color: #64748b;
+      font-size: 1.1rem;
+      padding: 60px;
+    }
+    #error-msg {
+      text-align: center;
+      color: #f87171;
+      padding: 40px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚔️ Word Battle Analytics</h1>
+  <p class="subtitle">User Study Dashboard — live data from the database</p>
+  <div style="display:flex;justify-content:center;gap:12px;margin-bottom:28px">
+    <button class="refresh-btn" style="margin:0" onclick="loadData()">↻ Refresh</button>
+    <button class="refresh-btn" style="margin:0;background:#334155;color:#94a3b8" onclick="logout()">⎋ Logout</button>
+    <button class="refresh-btn" style="margin:0;background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444" onclick="resetDatabase()">🗑 Reset Database</button>
+  </div>
+
+  <div id="loading">Loading analytics...</div>
+  <div id="error-msg">Failed to load data. Is the Flask server running?</div>
+
+  <div id="dashboard" style="display:none">
+
+    <!-- Overview Cards -->
+    <div class="cards" id="cards"></div>
+
+    <!-- Charts Row -->
+    <div class="section">
+      <h2>Charts</h2>
+      <div class="charts-grid">
+        <div class="chart-box">
+          <h3>Who Wins Games?</h3>
+          <canvas id="chartWinner"></canvas>
+        </div>
+        <div class="chart-box">
+          <h3>Rule Violations by Type</h3>
+          <canvas id="chartViolations"></canvas>
+        </div>
+        <div class="chart-box">
+          <h3>Avg Round Duration (seconds)</h3>
+          <canvas id="chartDuration"></canvas>
+        </div>
+        <div class="chart-box">
+          <h3>Difficulty Distribution</h3>
+          <canvas id="chartDifficulty"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Per-user table -->
+    <div class="section">
+      <h2>Per-User Summary</h2>
+      <table id="tableUsers">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Games Played</th>
+            <th>User Wins</th>
+            <th>AI Wins</th>
+            <th>Avg Game (min)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Recent games table -->
+    <div class="section">
+      <h2>Recent Games</h2>
+      <table id="tableGames">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Started</th>
+            <th>Winner</th>
+            <th>Outcome</th>
+            <th>Rounds</th>
+            <th>User Time Left</th>
+            <th>AI Time Left</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    const COLORS = ['#31ceb0','#38bdf8','#a78bfa','#fb923c','#f472b6','#4ade80','#facc15','#f87171'];
+    let charts = {};
+
+    function destroyChart(id) {
+      if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+    }
+
+    function makeChart(id, type, labels, data, extraOpts = {}) {
+      destroyChart(id);
+      const ctx = document.getElementById(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type,
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: COLORS,
+            borderColor: type === 'bar' ? COLORS : '#0f172a',
+            borderWidth: type === 'bar' ? 0 : 2,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { labels: { color: '#94a3b8', font: { size: 11 } } }
+          },
+          scales: type === 'bar' ? {
+            x: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+            y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' }, beginAtZero: true }
+          } : {},
+          ...extraOpts
+        }
+      });
+    }
+
+    function badge(val, map) {
+      const cls = map[val] || 'badge-tie';
+      return `<span class="badge ${cls}">${val || '—'}</span>`;
+    }
+
+    async function loadData() {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('error-msg').style.display = 'none';
+
+      try {
+        const res = await fetch('/analytics/data');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const d = await res.json();
+
+        // ── Overview cards ──
+        const ov = d.overview;
+        const cardDefs = [
+          { value: ov.total_users,           label: 'Participants' },
+          { value: ov.total_games,           label: 'Games Completed' },
+          { value: ov.total_rounds,          label: 'Rounds Completed' },
+          { value: ov.user_wins,             label: 'User Wins' },
+          { value: ov.ai_wins,               label: 'AI Wins' },
+          { value: ov.ties,                  label: 'Ties' },
+          { value: (ov.avg_round_duration_sec ?? '—') + 's', label: 'Avg Round Duration' },
+          { value: ov.avg_user_guesses_per_round ?? '—', label: 'Avg Guesses / Round' },
+          { value: ov.ai_accuracy_pct + '%',   label: 'AI Guess Accuracy' },
+          { value: ov.user_accuracy_pct + '%',  label: 'User Guess Accuracy' },
+          { value: ov.total_violations,          label: 'Rule Violations' },
+          { value: ov.violation_rate_pct + '%', label: 'Violation Rate' },
+        ];
+        document.getElementById('cards').innerHTML = cardDefs.map(c =>
+          `<div class="card"><div class="value">${c.value}</div><div class="label">${c.label}</div></div>`
+        ).join('');
+
+        // ── Charts ──
+        // Winner pie
+        makeChart('chartWinner', 'doughnut',
+          ['User', 'AI', 'Tie'],
+          [ov.user_wins, ov.ai_wins, ov.ties]
+        );
+
+        // Violations by type
+        if (d.violations_by_type.length) {
+          makeChart('chartViolations', 'bar',
+            d.violations_by_type.map(v => v.type),
+            d.violations_by_type.map(v => v.count)
+          );
+        }
+
+        // Duration by mode
+        if (d.round_duration_by_mode.length) {
+          makeChart('chartDuration', 'bar',
+            d.round_duration_by_mode.map(r => r.mode === 'user_guesses' ? 'User Guesses' : 'AI Guesses'),
+            d.round_duration_by_mode.map(r => r.avg_sec)
+          );
+        }
+
+        // Difficulty distribution
+        if (d.difficulty_distribution.length) {
+          makeChart('chartDifficulty', 'doughnut',
+            d.difficulty_distribution.map(x => x.difficulty),
+            d.difficulty_distribution.map(x => x.count)
+          );
+        }
+
+        // ── Per-user table ──
+        const userTbody = document.querySelector('#tableUsers tbody');
+        userTbody.innerHTML = d.per_user_summary.map(u => `
+          <tr>
+            <td>${u.username}</td>
+            <td>${u.games_played}</td>
+            <td>${u.user_wins}</td>
+            <td>${u.ai_wins}</td>
+            <td>${u.avg_game_min ?? '—'} min</td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" style="color:#64748b">No completed games yet</td></tr>';
+
+        // ── Recent games table ──
+        const winnerMap = { user: 'badge-user', ai: 'badge-ai', tie: 'badge-tie' };
+        const outcomeMap = { win: 'badge-win', timeout: 'badge-timeout', loss: 'badge-loss' };
+        const gameTbody = document.querySelector('#tableGames tbody');
+        gameTbody.innerHTML = d.recent_games.map(g => `
+          <tr>
+            <td>${g.game_id}</td>
+            <td>${g.username}</td>
+            <td>${g.started_at ? g.started_at.slice(0, 16) : '—'}</td>
+            <td>${badge(g.winner, winnerMap)}</td>
+            <td>${badge(g.outcome, outcomeMap)}</td>
+            <td>${g.total_rounds}</td>
+            <td>${g.user_time_left ?? '—'}s</td>
+            <td>${g.ai_time_left ?? '—'}s</td>
+          </tr>
+        `).join('') || '<tr><td colspan="8" style="color:#64748b">No games yet</td></tr>';
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+
+      } catch (e) {
+        console.error(e);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error-msg').style.display = 'block';
+      }
+    }
+
+    async function resetDatabase() {
+      if (!confirm('⚠️ WARNING: This will permanently delete ALL user study data (users, games, rounds, actions, referee checks).\n\nThis cannot be undone. Are you sure?')) return;
+      if (!confirm('Are you absolutely sure? All data will be lost forever.')) return;
+      const res = await fetch('/analytics/reset-db', { method: 'POST' });
+      const data = await res.json();
+      if (data.ok) {
+        alert('✅ Database reset successfully. All tables are now empty.');
+        loadData();
+      } else {
+        alert('❌ Error: ' + (data.error || 'Unknown error'));
+      }
+    }
+
+    async function logout() {
+      await fetch('/analytics/logout');
+      window.location.reload();
+    }
+
+    loadData();
+  </script>
+</body>
+</html>

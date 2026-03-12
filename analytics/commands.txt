@@ -1,0 +1,36 @@
+Commands to make table look better:
+.mode box
+.headers on
+.nullvalue NULL
+
+
+Commands for each analytic:
+.read analytics/ai_accuracy_in_ai_guesses.sql
+
+.read analytics/avg_game_duration_by_outcome.sql
+
+.read analytics/avg_guesses_hints_per_game_mode.sql
+
+.read analytics/avg_time_per_user_action_type.sql
+
+.read analytics/invalid_attempts_per_game.sql
+
+.read analytics/invalid_attempts_per_user.sql
+
+.read analytics/most_common_categories.sql
+
+.read analytics/outcome_counts_per_user.sql
+
+.read analytics/quick_quits.sql
+
+.read analytics/referee_checks_per_user_turn.sql
+
+.read analytics/top_users_by_total_games.sql
+
+.read analytics/turn_durations_per_user.sql
+
+.read analytics/win_rate_by_difficulty_category.sql
+
+.read analytics/win_rate_by_game_mode.sql
+
+.read analytics/win_rate_per_user.sql

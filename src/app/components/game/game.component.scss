@@ -1,0 +1,21 @@
+.active-timer {
+  color: #ff5722;
+  font-weight: bold;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.turn-announcement {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #00ccff;
+  font-family: "Orbitron", sans-serif;
+  text-shadow: 0 0 6px #00ccff;
+}

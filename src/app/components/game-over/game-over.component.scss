@@ -1,0 +1,123 @@
+.game-over-container {
+  max-width: 600px;
+  width: 90%;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #1e293b;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 12px rgb(49 207 176 / 48%);
+  font-family: 'Orbitron', sans-serif;
+  box-sizing: border-box;
+
+  .game-over-title {
+    font-size: 2.5rem;
+    color: #16a34a;
+    margin-bottom: 1rem;
+  }
+
+  .game-over-message {
+    font-size: 1.2rem;
+    color: #d1fae5;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #0e172a;
+    padding: 1.5rem 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    color: #e2e8f0;
+    width: 100%;
+    box-sizing: border-box;
+
+    .summary-title {
+      font-size: 1.2rem;
+      color: #e2e8f0;
+      margin-bottom: 1.2rem;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      width: 100%;
+      gap: 1rem;
+    }
+
+    .stat-group {
+      flex: 1;
+      min-width: 0;
+
+      h3 {
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+        color: #38bdf8;
+      }
+
+      p {
+        margin: 0.4rem 0;
+        font-family: monospace;
+        font-size: 0.9rem;
+        white-space: nowrap;
+
+        .label {
+          color: #94a3b8;
+        }
+      }
+    }
+  }
+
+  button {
+    margin-top: 1.5rem;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
+    border-radius: 8px;
+    border: none;
+    background-color: #10b981;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.7);
+    width: 100%;
+    max-width: 280px;
+
+    &:hover {
+      background-color: #059669;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.5rem 1rem;
+    margin: 1rem auto;
+
+    .game-over-title {
+      font-size: 2rem;
+    }
+
+    .game-over-message {
+      font-size: 1rem;
+    }
+
+    .stats-summary {
+      padding: 1rem 0.75rem;
+
+      .stats-row {
+        gap: 0.5rem;
+      }
+
+      .stat-group {
+        h3 {
+          font-size: 0.85rem;
+        }
+
+        p {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}

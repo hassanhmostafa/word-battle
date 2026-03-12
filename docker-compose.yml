@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"  # Expose Angular at /llm-wordgame/
+    depends_on:
+      - backend
+    networks:
+      - ollama-docker
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    expose:
+      - "5001"
+    environment:
+      - OLLAMA_API=http://ollama:11434
+    depends_on:
+      - ollama
+    networks:
+      - ollama-docker
+
+  ollama:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.ollama
+    image: ollama
+    container_name: ollama
+    entrypoint: /tmp/run_ollama.sh
+    expose:
+      - "11434"
+    volumes:
+      - .:/app/
+      - ./ollama/ollama:/root/.ollama
+    pull_policy: always
+    tty: true
+    restart: always
+    networks:
+      - ollama-docker
+
+volumes:
+  ollama_data:
+networks:
+  ollama-docker:
+    external: false

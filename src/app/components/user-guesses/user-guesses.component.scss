@@ -1,0 +1,411 @@
+.user-guess__container {
+  max-width: 1000px;
+  margin: 4rem auto;
+  padding: 4rem;
+  background-color: #1e293b;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 12px rgb(49 207 176 / 48%);
+  font-family: 'Orbitron', sans-serif;
+
+  .ai-loading {
+    display: flex;
+    align-items: center;
+    font-style: italic;
+    color: #64748b;
+    margin: 1rem;
+
+    .spinner {
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid #cbd5e1;
+      border-top: 2px solid #0ea5e9;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+  .description {
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    margin-top: 3rem;
+    color: #d3d3d3;
+    background: #0e172a;
+    line-height: 2rem;
+    border: 1px solid #334155;
+    font-family: monospace;
+  }
+  .guess-input input {
+    padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid #04ffcc;
+      background-color: #0d172a;
+      margin-bottom: 2rem;
+      color: #d3d3d3;
+  }
+  .button-row {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .submit-button,
+    .hint-button {
+      flex: 1;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      color: white;
+      cursor: pointer;
+
+      &:disabled {
+        background-color: #d1d5db;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+    }
+
+    .submit-button {
+      background-color: #0da788;
+      box-shadow: 0 0 5px rgb(4 255 204);
+    }
+
+    .hint-button {
+      background-color: #0ab3df;
+      box-shadow: 0 0 5px rgb(28 187 228);
+    }
+  }
+  
+  
+  .skip-container {
+    text-align: center;
+    margin-top: 1rem;
+
+    .skip-button {
+      background-color: transparent;
+      color: #04ffcc;
+      padding: 0;
+      border: none;
+      cursor: pointer;
+      float: right;
+      font-size: 15px;
+      margin-bottom: 2rem;
+    }
+  }
+  .feedback {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 500;
+    /* background and color styles are now handled by specific classes */
+  }
+  .feedback.correct {
+    background: #bbf7d0;
+    color: #16a34a;
+  }
+  .feedback.incorrect {
+    background: #fecaca;
+    color: #dc2626;
+  }
+  .feedback.hint-style {
+    font-size: 1.1rem;
+    /* color: #22d3ee; */
+    background-color: #0e172a;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    display: inline-block;
+    box-shadow: 0 0 8px rgba(34, 211, 238, 0.3);
+    font-family: 'Orbitron', sans-serif;
+  }
+  .back-button {
+    margin-top: 2rem;
+    text-align: center;
+  
+    button {
+      padding: 0.5rem 1rem;
+        background-color: #0da788;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+    
+        &:hover {
+          background-color: #0a7f6c;
+        }
+    }
+  }
+
+  .next-button {
+    padding: 0.5rem 1rem;
+    background-color: #0da788;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 1rem;
+  }
+
+  .hints .hint {
+    background: #f1f5f9;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+  }
+ 
+}
+
+
+/* TOP BUBBLE — round start, skip, hint, referee messages */
+.commentary-bubble {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  margin: 8px 0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-style: italic;
+  animation: fadeInSlide 0.3s ease-out;
+
+  .commentary-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .commentary-text {
+    flex: 1;
+  }
+
+  &.positive {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  &.negative {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  &.neutral {
+    background-color: #e2e3e5;
+    color: #383d41;
+    border: 1px solid #d6d8db;
+  }
+
+  &.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+  }
+}
+
+/* INLINE — correct/wrong guess reactions, appears right under the feedback */
+.feedback-commentary {
+  margin-top: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 500;
+  animation: fadeInSlide 0.3s ease-out;
+
+  &.positive {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  &.negative {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  &.neutral {
+    background-color: #e2e3e5;
+    color: #383d41;
+  }
+
+  &.warning {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* ─────────────────────────────────────────────
+   Feature 2: 3-part figure (add to both
+   user-guesses.component.scss and
+   ai-guesses.component.scss)
+───────────────────────────────────────────── */
+
+.figure-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem auto;
+  width: fit-content;
+
+  .figure-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+    margin-bottom: 0.4rem;
+  }
+
+  .figure-svg {
+    width: 80px;
+    height: 90px;
+  }
+
+  .figure-attempts {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Feature 1: AI override banner (add to
+   ai-guesses.component.scss only)
+───────────────────────────────────────────── */
+
+.ai-override-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0.75rem 0;
+
+  &.generating {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+  }
+
+  &.active {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+  }
+}
+
+/* Textarea styling when AI has taken over */
+textarea.ai-override {
+  background-color: #f0f7ff;
+  border: 2px solid #3498db;
+  color: #1a1a2e;
+  font-style: italic;
+  cursor: not-allowed;
+}
+
+
+
+/* h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1e293b;
+} */
+
+/* .username-banner {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #334155;
+} */
+
+/* .difficulty-select {
+  margin-bottom: 1.5rem;
+}
+
+.difficulty-label {
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.difficulty-controls {
+  display: flex;
+  gap: 1rem;
+} */
+
+
+
+
+
+
+
+
+
+
+
+// .difficulty-indicator,
+// .timer,
+// .answer-tracker {
+//   font-size: 1.1rem;
+//   margin-bottom: 1rem;
+// }
+
+// .timer {
+//   color: #1d4ed8;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ── Mobile responsiveness ─────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .user-guess__container {
+    margin: 1rem auto;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+}

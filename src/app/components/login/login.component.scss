@@ -1,0 +1,140 @@
+.login-container {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 4rem;
+  background-color: #1e293b;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 12px rgb(49 207 176 / 48%);
+  font-family: 'Orbitron', sans-serif;
+
+  h2{
+    text-align: center;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: #00ffcc;
+    text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc;
+    font-family: 'Orbitron', sans-serif;
+    i{
+      color: #2d685f;
+    }
+  }
+  label{
+    color : #d3d3d3
+  }
+  input {
+    padding: 0.5rem;
+    width: 80%;
+    margin: 1rem 0;
+    border-radius: 6px;
+    border: 1px solid #04ffcc;
+    background-color: #0d172a;
+    color: #d3d3d3;
+  }
+  button {
+    padding: 0.5rem 1rem;
+    background-color: #0da788;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  button:hover {
+    background-color: #0a7f6c;
+  }
+}
+
+
+.game-rules {
+  max-width: 700px;
+  margin: 4rem auto;
+  padding: 4rem;
+  background-color: #1e293b;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 12px rgb(49 207 176 / 48%);
+  font-family: 'Orbitron', sans-serif;
+
+  h3 {
+    margin-bottom: 2rem;
+    color: #00ffcc;
+    text-align: center;
+  }
+  
+  ul {
+    padding-left: 1.2rem;
+    line-height: 1.6;
+    color: #d3d3d3;
+    text-align: left;
+    margin: 0 auto;
+
+    li{
+      strong {
+        color: #04ffcc;
+      }
+      &::marker {
+        color: #04ffcc;
+      }
+    }
+  }
+}
+
+
+.welcome-back {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  animation: fadeIn 0.5s ease-in;
+
+  .welcome-text {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 500;
+
+    i {
+      margin-right: 8px;
+      animation: wave 1s ease-in-out infinite;
+    }
+
+    strong {
+      font-weight: 700;
+      color: #ffd700;
+    }
+  }
+
+  .info-text {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.9;
+    font-style: italic;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(20deg);
+  }
+  75% {
+    transform: rotate(-20deg);
+  }
+}
+

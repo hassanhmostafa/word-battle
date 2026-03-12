@@ -1,0 +1,6 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/64d52cb4-0a7c-4ad8-8473-c32da6975b04/resourceGroups/appsvc_linux_westeurope/providers/Microsoft.Web/sites/llama-wordgame-kimia2",
+    "appService.deploySubpath": "Llama-Word-New",
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
+}

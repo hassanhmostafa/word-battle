@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <title>WORD BATTLE</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <base href="/" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  </head>
+  <body>
+    <app-root>Loading...</app-root>
+    <audio
+      id="correct-sound"
+      src="static/sounds/correct-answer.wav"
+      preload="auto"
+    ></audio>
+    <audio
+      id="wrong-sound"
+      src="static/sounds/wrong-answer-.wav"
+      preload="auto"
+    ></audio>
+    <audio
+      id="applause-sound"
+      src="static/sounds/well-done.wav"
+      preload="auto"
+    ></audio>
+    <audio id="win-sound" src="static/sounds/win.wav" preload="auto"></audio>
+    <audio
+      id="game-over-sound"
+      src="static/sounds/game-over.wav"
+      preload="auto"
+    ></audio>
+    <audio
+      id="background-sound"
+      src="static/sounds/background.wav"
+      preload="auto"
+      loop
+      autoplay
+    ></audio>
+    <script>
+      window.addEventListener("load", function () {
+        const bgSound = document.getElementById("background-sound");
+        bgSound.play().catch((e) => {
+          console.log("Autoplay failed:", e);
+        });
+      });
+    </script>
+  </body>
+</html>

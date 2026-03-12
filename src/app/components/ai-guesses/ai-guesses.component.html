@@ -1,0 +1,132 @@
+<div class="ai-guess_container">
+  <app-game-header
+    [username]="username"
+    [round]="roundNumber"
+    [difficulty]="currentDifficulty"
+    [correctAnswers]="gameService.aiStats.correct"
+    [wrongAnswers]="gameService.aiStats.wrong"
+    [userTimeLeft]="userGuessTimeLeft"
+    [aiTimeLeft]="aiGuessTimeLeft"
+    [aiStats]="gameService.aiStats"
+    [userStats]="gameService.userStats"
+    [currentCategory]="currentCategory"
+    [isAiGuessMode]="isAiGuessMode"
+    [wrongGuesses]="localWrongGuesses"
+  ></app-game-header>
+
+  <!-- AI Commentary — TOP BUBBLE -->
+  <div *ngIf="commentaryMessage" class="commentary-bubble" [ngClass]="commentaryType">
+    <span class="commentary-icon">🎙️</span>
+    <span class="commentary-text">{{ commentaryMessage }}</span>
+  </div>
+
+  <!-- AI Commentary (correct/wrong guess reactions) -->
+  <div *ngIf="feedbackCommentary" class="feedback-commentary" [ngClass]="feedbackCommentaryType">
+    🎙️ {{ feedbackCommentary }}
+  </div>
+
+  <div class="selected-word" *ngIf="correctWord">
+    <strong>Your word:</strong> {{ correctWord }}
+  </div>
+
+  <div class="forbidden-words" *ngIf="isForbiddenLoading">
+    <em>Loading forbidden words...</em>
+  </div>
+
+  <div class="forbidden-words" *ngIf="!isForbiddenLoading && forbiddenWords?.length">
+    <div class="label"><strong>Avoid these words:</strong></div>
+    <div class="chips">
+      <span class="chip" *ngFor="let w of forbiddenWords">{{ w }}</span>
+    </div>
+  </div>
+
+  <!-- AI takeover banner -->
+  <div *ngIf="isGeneratingAiDescription" class="ai-override-banner generating">
+    ⏳ You submitted 3 invalid descriptions. The AI is generating a description for you...
+  </div>
+
+  <div *ngIf="aiDescriptionOverride && !isGeneratingAiDescription" class="ai-override-banner active">
+    🤖 The AI has taken over and written the description below. Submitting automatically...
+  </div>
+
+  <div class="description-input">
+    <textarea
+      [(ngModel)]="userDescription"
+      [disabled]="isThinking || localWrongGuesses > 0 || aiDescriptionOverride"
+      [class.ai-override]="aiDescriptionOverride"
+      placeholder="Describe your word for the AI to guess..."
+      rows="4"
+    ></textarea>
+
+    <div class="button-row">
+      <button
+        class="guess-button"
+        [hidden]="localWrongGuesses >= 2"
+        [disabled]="isThinking || isGeneratingAiDescription || showingResult"
+        (click)="submitDescription()"
+      >
+        {{ isThinking ? 'Thinking...' : (localWrongGuesses === 0 ? 'Let AI Guess' : 'Guess Again') }}
+      </button>
+
+      <button
+        class="hint-button"
+        (click)="handleSkip()"
+        [hidden]="localWrongGuesses !== 0 || isThinking || aiDescriptionOverride"
+        [disabled]="showingResult"
+      >
+        change the Word (-2s)
+      </button>
+    </div>
+
+    <div *ngIf="isThinking" class="thinking-message">
+      <em>Hmm.. I'm thinking...</em>
+    </div>
+
+    <div *ngIf="isHintPhase" class="hint-input">
+      <textarea
+        [(ngModel)]="userHint"
+        placeholder="Write a hint for the AI..."
+        rows="3"
+      ></textarea>
+      <button (click)="submitHint()">Submit Hint</button>
+    </div>
+  </div>
+
+  <!-- Referee violations -->
+  <div *ngIf="refereeErrorMsg" class="feedback hint-style incorrect">
+    <div style="font-weight: 700; margin-bottom: 6px;">
+      {{ refereeErrorMsg }}
+    </div>
+    <ul *ngIf="refereeViolations?.length" style="margin: 0; padding-left: 18px;">
+      <li *ngFor="let v of refereeViolations">{{ v }}</li>
+    </ul>
+  </div>
+
+  <div
+    *ngIf="aiGuess"
+    class="ai-guess"
+    [ngStyle]="{
+      backgroundColor: aiGuessChecked ? (isAiGuessCorrect ? '#d4edda' : '#f8d7da') : '#e2e3e5',
+      color: aiGuessChecked ? (isAiGuessCorrect ? '#155724' : '#721c24') : '#383d41',
+      padding: '0.5rem 1rem',
+      borderRadius: '6px',
+      marginTop: '1rem',
+      fontWeight: 'bold'
+    }"
+  >
+    AI's guess: {{ aiGuess }}
+  </div>
+
+  <!-- Feedback (Correct / Wrong) -->
+  <div
+    *ngIf="feedback"
+    class="feedback hint-style"
+    [ngClass]="isAiGuessCorrect ? 'correct' : 'incorrect'"
+  >
+    {{ feedback }}
+  </div>
+
+  <div class="back-button">
+    <button (click)="goBack()">Back to Start</button>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="category-select">
+  <label style="font-weight: bold; font-size: 1.2rem">
+    Select a category to start:
+  </label>
+  <ul>
+    <li
+      *ngFor="let category of categories"
+      (click)="selectCategory(category)"
+      [ngClass]="{ 'category-done': categoryUsage[category] === 3 }"
+    >
+      {{ categoryLabel[category] }} ({{
+        CATEGORY_LIMIT - categoryUsage[category]
+      }}
+      left)
+    </li>
+  </ul>
+</div>

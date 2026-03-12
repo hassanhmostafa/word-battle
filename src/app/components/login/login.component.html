@@ -1,0 +1,71 @@
+<div class="login-wrapper">
+  <div class="login-container">
+    <h2>
+      <i class="fa-solid fa-robot"></i>
+      WORD BATTLE
+      <i class="fa-solid fa-puzzle-piece"></i>
+    </h2>
+
+    <!-- Welcome back message for returning users -->
+    <div *ngIf="isReturningUser" class="welcome-back">
+      <p class="welcome-text">
+        <i class="fa-solid fa-hand-wave"></i>
+        Welcome back, <strong>{{existingUsername}}</strong>!
+      </p>
+      <p class="info-text">You can change your name below if needed.</p>
+    </div>
+
+    <label for="username">
+      {{ isReturningUser ? 'Your name:' : 'Enter your name to start:' }}
+    </label>
+    <input 
+      id="username" 
+      [(ngModel)]="username" 
+      placeholder="Your name" 
+    />
+    <button (click)="startGame()">
+      {{ isReturningUser ? 'Continue' : 'Start Game' }}
+    </button>
+  </div>
+
+  <div class="game-rules">
+    <h3><i class="fa-solid fa-triangle-exclamation"></i> Game Rules</h3>
+    <ul>
+      <li>
+        The game has <strong>3 difficulty levels</strong>: Easy, Medium, Hard.
+      </li>
+      <li>
+        Each difficulty level has 3 sublevels, making a total of <strong>9 levels</strong>.
+      </li>
+      <li>
+        Game starts with AI describing a word and you trying to guess it (AI describes → you guess).
+      </li>
+      <li>
+        After you guess, you will describe a new word and the AI will try to guess it (You describe → AI guesses).
+      </li>
+      <li>You and the AI each start with <strong>{{ initialTime }} seconds</strong>.</li>
+      <li>Time runs only on the active player's turn.</li>
+      <li>Each correct answer gives you back half the time you took to guess it.</li>
+      <li><strong>Hint usage:</strong> -2 seconds</li>
+      <li><strong>Change the word :</strong> -2 seconds</li>
+      <li>If your time runs out, the game ends immediately.</li>
+      <li>The winner is the one with more time left at the end!</li>
+    </ul>
+
+    <h3><i class="fa-solid fa-shield-halved"></i> Description Rules (Referee)</h3>
+    <ul>
+      <li><strong>Your description must</strong> give clear clues that help the AI guess the word.</li>
+      <li><strong>Your description must not</strong> reveal the secret word or any close form of it (plural/derived forms).</li>
+      <li><strong>Your description must not</strong> give spelling or length clues (like “starts with…”, “ends with…”, “has 5 letters”).</li>
+      <li><strong>Your description must not</strong> give rhyme clues (like “rhymes with…”).</li>
+      <li><strong>Your description must not</strong> use any of the “Avoid these words”.</li>
+      <li><strong>Your description must not</strong> be too vague or generic (like “it’s a thing”, “it’s nice”).</li>
+      <li><strong>Your description must not</strong> be incorrect or unrelated to the word.</li>
+      <li><strong>Your description must not</strong> contain offensive or inappropriate content.</li>
+
+      <li><strong>If you submit a hint:</strong> it must add at least one new concrete detail (repeating the description doesn’t count).</li>
+      <li><strong>If you submit a hint:</strong> you may use <strong>at most one</strong> avoided word.</li>
+      <li><strong>If you submit a hint:</strong> you may give <strong>at most one</strong> spelling/letter/length clue.</li>
+    </ul>
+  </div>
+</div>

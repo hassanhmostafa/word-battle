@@ -56,7 +56,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions"
 GROQ_MODEL = "llama-3.1-8b-instant"  # fastest Groq model, ~150ms
 
-def llm_complete_fastest(prompt: str, temperature: float = 0.9, max_tokens: int = 60 ) -> str:
+def llm_complete_fastest(prompt: str, temperature: float = 0.9, max_tokens: int = 150) -> str:
     """
     Ultra-fast commentary generation using Groq's llama-3.1-8b-instant.
     ~150ms latency. Used only for funny game commentary messages.

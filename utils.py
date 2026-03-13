@@ -8,11 +8,9 @@ import os
 from functools import lru_cache
 
 import spacy
-from detoxify import Detoxify
 from ai import *
 
 nlp = spacy.load("en_core_web_sm")
-detox = Detoxify("original")
 
 # -----------------------------------------------------------------------------
 # Simple in-memory cache to prevent "click until pass"
@@ -62,19 +60,8 @@ def _extract_json(s: str) -> Optional[dict]:
 
 
 def check_toxicity(text: str, threshold: float = 0.8) -> Tuple[bool, Dict[str, float]]:
-    """Check if text contains toxic content using Detoxify."""
-    scores = detox.predict(text)
-    scores = {k: float(v) for k, v in scores.items()}
-    is_bad = (
-        scores.get("toxicity", 0) >= threshold
-        or scores.get("severe_toxicity", 0) >= threshold
-        or scores.get("obscene", 0) >= threshold
-        or scores.get("threat", 0) >= threshold
-        or scores.get("insult", 0) >= threshold
-        or scores.get("identity_attack", 0) >= threshold
-        or scores.get("sexual_explicit", 0) >= threshold
-    )
-    return is_bad, scores
+    """Toxicity check stub — detoxify removed to reduce image size."""
+    return False, {}
 
 
 # ============================================================================

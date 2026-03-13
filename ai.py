@@ -1,5 +1,4 @@
 import os
-import ollama
 import requests
 import uuid
 import json

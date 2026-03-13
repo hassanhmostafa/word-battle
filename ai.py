@@ -6,7 +6,6 @@ import json
 import random
 import logging
 import sqlite3
-from ollama import Client as OllamaClient
 from flask import g, Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -16,30 +15,6 @@ import time
 # ============================================================================
 # AI CLIENT INITIALIZATION - ANTHROPIC RECOMMENDED
 # ============================================================================
-
-# ===== OPTION 1: ANTHROPIC (RECOMMENDED) =====
-'''from anthropic import Anthropic
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-client = Anthropic(api_key=ANTHROPIC_API_KEY)
-MODEL = "claude-sonnet-4-20250514"  # Latest Claude Sonnet 4
-AI_PROVIDER = "anthropic"
-
-def llm_complete(prompt, *, temperature=0.7, top_p=0.9, max_tokens=256):
-    """Anthropic Claude completion"""
-    try:
-        message = client.messages.create(
-            model=MODEL,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            top_p=top_p,
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-        return message.content[0].text.strip()
-    except Exception as e:
-        logger.error(f"Anthropic API error: {e}")
-        raise'''
 
 # ===== OPTION 2: OPENAI =====
 from openai import OpenAI
@@ -77,50 +52,6 @@ def llm_complete_fast(prompt: str, *, temperature: float = 0.0, max_tokens: int 
     return (resp.choices[0].message.content or "").strip()
 
 
-# ===== OPTION 3: OLLAMA FASTEST (ADDED WITHOUT CHANGING EXISTING FLOWS) =====
-'''os.environ['OLLAMA_HOST'] = 'http://ollama:11434'
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
-ollama_client = OllamaClient(host=OLLAMA_HOST)
-
-def llm_complete_fastest(prompt: str, *, temperature: float = 0.7,
-                 top_p: float = 0.9, max_tokens: int = 256) -> str:
-    """
-    Simple helper to call a locally running Ollama model.
-    """
-    response = ollama.chat(
-        model='gemma3:1b',
-        messages=[
-            {"role": "system", "content": "You are a helpful, playful word-game master."},
-            {"role": "user", "content": prompt}
-        ],
-        options={
-            "temperature": temperature,
-            "top_p": top_p,
-            "num_predict": max_tokens
-        }
-    )
-
-    return response['message']['content'].strip()'''
-
-# ===== OPTION 4: GROQ =====
-'''from groq import Groq
-client = Groq(api_key=GROQ_API_KEY)
-MODEL = "llama-3.3-70b-versatile"
-AI_PROVIDER = "groq"
- 
-def llm_complete(prompt, *, temperature=0.7, top_p=0.9, max_tokens=256):
-    """Groq completion"""
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {"role": "system", "content": "You are a helpful, playful word-game master."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=temperature,
-        top_p=top_p,
-        max_tokens=max_tokens
-    )
-    return response.choices[0].message.content.strip()'''
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions"

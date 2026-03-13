@@ -245,16 +245,13 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
     const enhancedInput = this.userDescription + " HINT: " + this.userHint;
 
-    // Hint costs the AI 2 seconds
-    this.timerChanged.emit({ aiGuessTimeDiff: -2 });
-
     this.commentaryService.generate(
       "The user is giving the AI a hint because it couldn't guess the word.",
       { category: this.currentCategory, attempt: this.localWrongGuesses },
       (msg) => this.showCommentary(msg, 'neutral')
     );
 
-    this.makeAiGuess(enhancedInput);
+    this.makeAiGuess(enhancedInput, undefined, true);
     this.userHint = "";
   }
 
@@ -341,7 +338,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
     this.pauseTimer();
   }
 
-  makeAiGuess(input: string, durationMs?: number) {
+  makeAiGuess(input: string, durationMs?: number, isHint: boolean = false) {
     const reqId = ++this.guessReqId;
 
     if (this.localWrongGuesses === 1 && this.aiGuess) {
@@ -389,6 +386,11 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
         next: (wrapped) => {
           if (reqId !== this.guessReqId) return;
           this.stopAiTimer();
+
+          // Apply -2 hint penalty only now that the hint was accepted as valid
+          if (isHint) {
+            this.timerChanged.emit({ aiGuessTimeDiff: -2 });
+          }
 
           // unwrap: hint path returns GuessResponse directly, description path wraps it
           const response = (wrapped as any)?.response ?? wrapped as any;

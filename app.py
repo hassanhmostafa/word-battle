@@ -31,7 +31,7 @@ CORS(app)
 # DATABASE SETUP
 # ============================================================================
 
-DATABASE = 'word_battle.db'
+DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'word_battle.db')
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -62,7 +62,7 @@ def init_db_command():
 # LOAD WORD DATA
 # ============================================================================
 
-with open("all_words.json", "r", encoding="utf-8") as fh:
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "all_words.json"), "r", encoding="utf-8") as fh:
     WORD_DATA = json.load(fh)
 
 # ============================================================================
@@ -1175,4 +1175,5 @@ def analytics_data():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port, debug=False)

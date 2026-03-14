@@ -20,18 +20,21 @@
       [wrongGuesses]="localWrongGuesses"
     ></app-game-header>
 
-    <!-- AI Commentary — TOP BUBBLE -->
-    <div *ngIf="commentaryMessage" class="commentary-bubble" [ngClass]="commentaryType">
-      <span class="commentary-icon">🎙️</span>
-      <span class="commentary-text">{{ commentaryMessage }}</span>
+    <div class="commentary-slot">
+      <!-- AI Commentary — TOP BUBBLE -->
+      <div *ngIf="commentaryMessage" class="commentary-bubble" [ngClass]="commentaryType">
+        <span class="commentary-icon">🎙️</span>
+        <span class="commentary-text">{{ commentaryMessage }}</span>
+      </div>
+
+      <div *ngIf="isLoading" class="ai-loading">
+        <span class="spinner"></span> Give me a minute, I'm thinking...
+      </div>
     </div>
+
     <!-- AI Commentary — INLINE under feedback -->
     <div *ngIf="feedbackCommentary" class="feedback-commentary" [ngClass]="feedbackCommentaryType">
       🎙️ {{ feedbackCommentary }}
-    </div>
-
-    <div *ngIf="isLoading" class="ai-loading">
-      <span class="spinner"></span> Give me a minute, I'm thinking...
     </div>
 
     <!-- Word description -->

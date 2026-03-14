@@ -88,9 +88,13 @@
     }
   }
   .thinking-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 72px;
     font-size: 1.2rem;
     color: #d3d3d3;
-    margin-top: 1rem;
+    margin: 0;
     font-weight: 500;
   }
 }
@@ -202,6 +206,15 @@ button {
   }
 }
 
+
+/* Reserved commentary area to prevent layout jumping */
+.commentary-slot {
+  min-height: 72px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* TOP BUBBLE — round start, skip, hint, referee messages */
 .commentary-bubble {
@@ -374,5 +387,9 @@ textarea.ai-override {
     margin: 1rem auto;
     padding: 1rem;
     border-radius: 8px;
+  }
+
+  .commentary-slot {
+    min-height: 88px;
   }
 }

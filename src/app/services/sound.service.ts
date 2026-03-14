@@ -5,10 +5,21 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 export class SoundService {
+  private readonly audioCache = new Map<string, HTMLAudioElement>();
+
+  constructor() {
+    ["correct", "wrong", "win", "game-over"].forEach((name) => {
+      const audio = new Audio(`assets/sounds/${name}.wav`);
+      audio.preload = "auto";
+      this.audioCache.set(name, audio);
+    });
+  }
+
   play(name: string) {
-    const audio = new Audio();
-    audio.src = `assets/sounds/${name}.wav`;
-    audio.load();
+    const cachedAudio = this.audioCache.get(name);
+    const audio = cachedAudio ? cachedAudio.cloneNode(true) as HTMLAudioElement : new Audio(`assets/sounds/${name}.wav`);
+    audio.preload = "auto";
+    audio.currentTime = 0;
     audio.play().catch((error) => {
       console.error(`Error playing sound '${name}':`, error);
     });

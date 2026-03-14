@@ -320,6 +320,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
         error: (err) => {
           if (reqId !== this.guessReqId) return;
           this.isThinking = false;
+          this.isSubmitting = false;
           this.feedback = "Failed to get AI guess. Please try again.";
         },
       });
@@ -414,7 +415,6 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
             this.gameService.aiStats.correct++;
             this.isHintPhase = false;
             this.isThinking = false;
-            this.isSubmitting = false;
 
             this.commentaryService.generate(
               "The AI guessed the word correctly!",
@@ -427,7 +427,6 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
             this.feedback = "Wrong.";
             this.soundService.playWrong();
             this.gameService.aiStats.wrong++;
-            this.isSubmitting = false;
 
             this.timerChanged.emit({ aiGuessTimeDiff: -10 });
 
@@ -456,6 +455,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
               this.feedback = `The correct word was: ${this.correctWord}`;
               this.soundService.playWrong();
               this.isHintPhase = false;
+              this.isSubmitting = false;
               this.endRoundAndAdvance("loss");
             } else {
               this.commentaryService.generate(
@@ -478,6 +478,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
           const parsed = this.parseBackendError(err);
 
           if (err?.status === 400 && parsed?.violations?.length) {
+            this.isSubmitting = false;
             this.refereeErrorMsg =
               parsed.message ||
               "Your description violates the rules. Please revise and try again.";
@@ -504,6 +505,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
             return;
           }
 
+          this.isSubmitting = false;
           this.feedback = "Failed to get AI guess. Please try again.";
         },
       });

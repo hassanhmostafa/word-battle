@@ -1084,40 +1084,13 @@ def get_active_game(db, user_id: int) -> int:
 
 
 def get_or_create_game(db, user_id: int, username: str, difficulty: str, new_game: bool = False) -> int:
-    if new_game:
-        db.execute(
-            "UPDATE Games SET outcome = 'abandoned', ended_at = CURRENT_TIMESTAMP "
-            "WHERE user_id = ? AND outcome IS NULL",
-            (user_id,)
-        )
-        db.commit()
-        print(f"🧹 Closed all unfinished games for user {user_id}")
-
-        cursor = db.execute(
-            'INSERT INTO Games (user_id, username_at_game_time, current_difficulty) VALUES (?, ?, ?)',
-            (user_id, username, difficulty)
-        )
-        db.commit()
-        new_id = cursor.lastrowid
-        print(f"🆕 Created new game: game_id={new_id}, difficulty={difficulty}")
-        return new_id
-
-    game = db.execute(
-        'SELECT game_id, total_rounds FROM Games WHERE user_id = ? AND outcome IS NULL ORDER BY started_at DESC LIMIT 1',
+    db.execute(
+        "UPDATE Games SET outcome = 'abandoned', ended_at = CURRENT_TIMESTAMP "
+        "WHERE user_id = ? AND outcome IS NULL",
         (user_id,)
-    ).fetchone()
-
-    if game and (game['total_rounds'] or 0) < 18:
-        print(f"📎 Resuming existing game: game_id={game['game_id']}")
-        return game['game_id']
-
-    if game:
-        db.execute(
-            "UPDATE Games SET outcome = 'abandoned', ended_at = CURRENT_TIMESTAMP WHERE game_id = ?",
-            (game['game_id'],)
-        )
-        db.commit()
-        print(f"🧹 Closed stale unfinished game {game['game_id']} at total_rounds={game['total_rounds']}")
+    )
+    db.commit()
+    print(f"🧹 Closed all unfinished games for user {user_id}")
 
     cursor = db.execute(
         'INSERT INTO Games (user_id, username_at_game_time, current_difficulty) VALUES (?, ?, ?)',
@@ -1125,7 +1098,7 @@ def get_or_create_game(db, user_id: int, username: str, difficulty: str, new_gam
     )
     db.commit()
     new_id = cursor.lastrowid
-    print(f"🆕 Created new game (no resumable open game found): game_id={new_id}, difficulty={difficulty}")
+    print(f"🆕 Created new game: game_id={new_id}, difficulty={difficulty}")
     return new_id
 
 

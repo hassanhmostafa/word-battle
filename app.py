@@ -406,12 +406,10 @@ def ask_llm_to_guess():
     else:
         # Description already approved — only validate the HINT part if present
         print("🕵️‍♂️ Description previously approved. Checking for hint...")
-        from utils import _split_desc_hint, _is_redundant_hint
+        from utils import _split_desc_hint, ai_hint_adds_new_information
         desc_part, hint_part = _split_desc_hint(user_description)
-
         if hint_part:
             print(f"💡 Hint found: {hint_part}. Validating hint...")
-
             # 1) WORD_LEAK check on the hint (secret word / morphological variants)
             hint_ok, hint_violations = rule_based_referee_check(hint_part, secret_word)
             if not hint_ok:
@@ -420,15 +418,14 @@ def ask_llm_to_guess():
                     "error": "Your hint violates the rules.",
                     "violations": hint_violations
                 }), 400
-
-            # 2) Redundancy check
-            if _is_redundant_hint(desc_part, hint_part):
-                print("❌ Hint is redundant.")
+            # 2) AI-based redundancy check
+            hint_adds_new_info, hint_reason = ai_hint_adds_new_information(desc_part, hint_part, llm_complete)
+            if not hint_adds_new_info:
+                print(f"❌ Hint rejected by AI redundancy check: {hint_reason}")
                 return jsonify({
                     "error": "Your hint repeats the description. Add new information.",
-                    "violations": [{"code": "REDUNDANT", "message": "Hint repeats the description. Add a new concrete detail.", "severity": "high"}]
+                    "violations": [{"code": "REDUNDANT", "message": hint_reason or "Hint repeats the description. Add a new concrete detail.", "severity": "high"}]
                 }), 400
-
             # 3) Forbidden words check (allow 1)
             if forbidden_words:
                 violated, found = check_forbidden_words(hint_part, forbidden_words, max_words=1)

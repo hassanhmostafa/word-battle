@@ -168,43 +168,52 @@ LETTER_HINT_RE = re.compile(
     re.IGNORECASE
 )
 
-def _content_lemmas(s: str) -> set:
-    doc = nlp((s or "").lower())
-    return {
-        t.lemma_
-        for t in doc
-        if t.is_alpha and not t.is_stop and t.pos_ in {"NOUN", "VERB", "ADJ", "ADV", "PROPN", "NUM"}
-    }
-
-def _is_redundant_hint(description: str, hint: str) -> bool:
-    hint = (hint or "").strip()
+def ai_hint_adds_new_information(description: str, hint: str, llm_complete_func) -> Tuple[bool, Optional[str]]:
     desc = (description or "").strip()
+    hint = (hint or "").strip()
 
     if not hint:
-        return True
+        return False, "Hint is empty."
 
-    # Super short hints are almost always redundant / useless
-    if len(hint.split()) < 3 and not LETTER_HINT_RE.search(hint):
-        return True
+    if llm_complete_func is None:
+        return False, "AI hint referee is not available."
 
-    d = _content_lemmas(desc)
-    h = _content_lemmas(hint)
+    prompt = f'''You are a referee for a word-guessing game.
+Your job is to decide whether a player's HINT adds genuinely new clue information beyond the already approved DESCRIPTION.
 
-    # If hint has no meaningful content words → redundant/useless
-    if not h:
-        return True
+DESCRIPTION:
+"""
+{desc}
+"""
 
-    # If hint adds zero new content words → redundant
-    new = h - d
-    if len(new) == 0:
-        return True
+HINT:
+"""
+{hint}
+"""
 
-    # If hint is *mostly* overlap and only adds 1 weak new token → treat as redundant
-    overlap_ratio = len(h & d) / max(1, len(h))
-    if overlap_ratio >= 0.8 and len(new) <= 1:
-        return True
+Decision rule:
+- Return is_redundant = true if the hint mostly repeats, rephrases, or paraphrases what is already in the description.
+- Return is_redundant = true if the hint is too vague or generic and does not add a new concrete clue.
+- Return is_redundant = false only if the hint adds at least one meaningful new clue not already conveyed in the description.
+- Letter-based hints such as first letter, starting letter, ending letter, or number of letters count as new information if not already stated.
+- Be strict. Small wording changes do not count as new information.
 
-    return False
+Return ONLY valid JSON inside <json> tags in exactly this shape:
+<json>
+{{"is_redundant": true, "reason": "short explanation"}}
+</json>'''
+
+    try:
+        raw = llm_complete_func(prompt, temperature=0, max_tokens=120)
+        parsed = _extract_json(raw or "")
+        if not isinstance(parsed, dict):
+            return False, "AI hint referee returned invalid JSON."
+
+        is_redundant = bool(parsed.get("is_redundant", True))
+        reason = str(parsed.get("reason", "")).strip() or "No explanation provided."
+        return (not is_redundant), reason
+    except Exception as e:
+        return False, f"AI hint referee failed: {e}"
 
 
 def ai_based_referee_check(

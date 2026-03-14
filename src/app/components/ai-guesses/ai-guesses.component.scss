@@ -35,6 +35,19 @@
       background-color: #0d172a;
       margin-bottom: 2rem;
       color: #d3d3d3;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background-color: #111827;
+        border-color: #6b7280;
+      }
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      pointer-events: none;
     }
   }
   .button-row {

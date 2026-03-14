@@ -346,7 +346,7 @@ def ask_llm_to_guess():
     User describes, AI guesses.
 
     ✅ FIXED: Skips re-validating the description if it was already approved.
-    ✅ FIXED: Validates the HINT separately for redundancy and forbidden words.
+    ✅ FIXED: Validates the HINT separately for rule violations and forbidden words.
     ✅ NEW:   AI returns a confidence score (0.0–1.0) which drives a dynamic
               thinking delay — low confidence = longer wait, high = shorter.
     """
@@ -406,7 +406,7 @@ def ask_llm_to_guess():
     else:
         # Description already approved — only validate the HINT part if present
         print("🕵️‍♂️ Description previously approved. Checking for hint...")
-        from utils import _split_desc_hint, ai_hint_adds_new_information
+        from utils import _split_desc_hint
         desc_part, hint_part = _split_desc_hint(user_description)
         if hint_part:
             print(f"💡 Hint found: {hint_part}. Validating hint...")
@@ -418,15 +418,7 @@ def ask_llm_to_guess():
                     "error": "Your hint violates the rules.",
                     "violations": hint_violations
                 }), 400
-            # 2) AI-based redundancy check
-            hint_adds_new_info, hint_reason = ai_hint_adds_new_information(desc_part, hint_part, llm_complete)
-            if not hint_adds_new_info:
-                print(f"❌ Hint rejected by AI redundancy check: {hint_reason}")
-                return jsonify({
-                    "error": "Your hint repeats the description. Add new information.",
-                    "violations": [{"code": "REDUNDANT", "message": hint_reason or "Hint repeats the description. Add a new concrete detail.", "severity": "high"}]
-                }), 400
-            # 3) Forbidden words check (allow 1)
+            # 2) Forbidden words check (allow 1)
             if forbidden_words:
                 violated, found = check_forbidden_words(hint_part, forbidden_words, max_words=1)
                 if violated:

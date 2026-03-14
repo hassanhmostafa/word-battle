@@ -168,54 +168,6 @@ LETTER_HINT_RE = re.compile(
     re.IGNORECASE
 )
 
-def ai_hint_adds_new_information(description: str, hint: str, llm_complete_func) -> Tuple[bool, Optional[str]]:
-    desc = (description or "").strip()
-    hint = (hint or "").strip()
-
-    if not hint:
-        return False, "Hint is empty."
-
-    if llm_complete_func is None:
-        return False, "AI hint referee is not available."
-
-    prompt = f'''You are a referee for a word-guessing game.
-Your job is to decide whether a player's HINT adds genuinely new clue information beyond the already approved DESCRIPTION.
-
-DESCRIPTION:
-"""
-{desc}
-"""
-
-HINT:
-"""
-{hint}
-"""
-
-Decision rule:
-- Return is_redundant = true if the hint mostly repeats, rephrases, or paraphrases what is already in the description.
-- Return is_redundant = true if the hint is too vague or generic and does not add a new concrete clue.
-- Return is_redundant = false only if the hint adds at least one meaningful new clue not already conveyed in the description.
-- Letter-based hints such as first letter, starting letter, ending letter, or number of letters count as new information if not already stated.
-- Be strict. Small wording changes do not count as new information.
-
-Return ONLY valid JSON inside <json> tags in exactly this shape:
-<json>
-{{"is_redundant": true, "reason": "short explanation"}}
-</json>'''
-
-    try:
-        raw = llm_complete_func(prompt, temperature=0, max_tokens=120)
-        parsed = _extract_json(raw or "")
-        if not isinstance(parsed, dict):
-            return False, "AI hint referee returned invalid JSON."
-
-        is_redundant = bool(parsed.get("is_redundant", True))
-        reason = str(parsed.get("reason", "")).strip() or "No explanation provided."
-        return (not is_redundant), reason
-    except Exception as e:
-        return False, f"AI hint referee failed: {e}"
-
-
 def ai_based_referee_check(
     description: str,
     secret_word: str,

@@ -33,6 +33,11 @@ export class GameHeaderComponent {
   // SVG circle circumference for r=34: 2 * π * 34 ≈ 213.6
   private readonly CIRCUMFERENCE = 213.6;
 
+  get displayRound(): number {
+    const safeRound = Math.max(1, this.round || 1);
+    return this.isAiGuessMode ? Math.floor((safeRound + 1) / 2) : Math.ceil(safeRound / 2);
+  }
+
   getUserArcOffset(): number {
     return this.calcOffset(this.userTimeLeft);
   }

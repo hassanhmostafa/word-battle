@@ -229,6 +229,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
   submitHint() {
     if (!this.userHint.trim()) return;
 
+    this.isSubmitting = true;
     this.hintUsed++;
 
     // Prime audio on the user's actual interaction before the result comes back.
@@ -413,6 +414,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
             this.gameService.aiStats.correct++;
             this.isHintPhase = false;
             this.isThinking = false;
+            this.isSubmitting = false;
 
             this.commentaryService.generate(
               "The AI guessed the word correctly!",
@@ -425,6 +427,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
             this.feedback = "Wrong.";
             this.soundService.playWrong();
             this.gameService.aiStats.wrong++;
+            this.isSubmitting = false;
 
             this.timerChanged.emit({ aiGuessTimeDiff: -10 });
 
@@ -451,6 +454,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
               );
 
               this.feedback = `The correct word was: ${this.correctWord}`;
+              this.soundService.playWrong();
               this.isHintPhase = false;
               this.endRoundAndAdvance("loss");
             } else {

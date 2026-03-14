@@ -86,7 +86,7 @@
         placeholder="Write a hint for the AI..."
         rows="3"
       ></textarea>
-      <button (click)="submitHint()">Submit Hint</button>
+      <button (click)="submitHint()" [disabled]="isSubmitting || isThinking || !userHint.trim()">Submit Hint</button>
     </div>
   </div>
 

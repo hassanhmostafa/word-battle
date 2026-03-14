@@ -1,88 +1,114 @@
 .game-win-container {
-  max-width: 1000px;
-  margin: 4rem auto;
-  padding: 4rem;
+  width: min(100%, 960px);
+  margin: 2rem auto;
+  padding: clamp(1.25rem, 4vw, 3rem);
   background-color: #1e293b;
   border-radius: 12px;
   text-align: center;
   box-shadow: 0 0 12px rgb(49 207 176 / 48%);
   font-family: 'Orbitron', sans-serif;
+  box-sizing: border-box;
 
   .game-win-title {
-    font-size: 3rem;
+    font-size: clamp(2.25rem, 6vw, 3rem);
     margin-bottom: 1rem;
-
-    // Default (fallback)
+    word-break: break-word;
     color: #16a34a;
 
-    // User wins → green
     &.title-user {
       color: #16a34a;
     }
 
-    // AI wins → red
     &.title-ai {
       color: #e74c3c;
     }
 
-    // Tie → yellow/gold
     &.title-tie {
       color: #f59e0b;
     }
   }
 
   .game-win-message {
-    font-size: 1.5rem;
+    font-size: clamp(1.05rem, 3vw, 1.5rem);
     margin-bottom: 2rem;
-
-    // Default (fallback)
+    line-height: 1.5;
     color: #d1fae5;
 
-    // User wins → green tint
     &.message-user {
       color: #d1fae5;
     }
 
-    // AI wins → red tint
     &.message-ai {
       color: #fecaca;
     }
 
-    // Tie → yellow tint
     &.message-tie {
       color: #fef3c7;
     }
   }
 
   .stats-summary {
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    align-items: stretch;
     background: #0e172a;
-    padding: 2rem;
+    padding: clamp(1rem, 3vw, 2rem);
     margin-top: 2rem;
     color: #e2e8f0;
+    border-radius: 12px;
+    box-sizing: border-box;
+
+    .summary-title,
+    .actions-row {
+      grid-column: 1 / -1;
+    }
+
+    .summary-title {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #e2e8f0;
+    }
 
     .stat-group {
-      flex: 1;
-      padding: 0 1rem;
+      min-width: 0;
+      padding: 1.25rem;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.16);
+      box-sizing: border-box;
+
+      &.winner-highlight {
+        border-color: rgba(16, 185, 129, 0.7);
+        box-shadow: 0 0 14px rgba(16, 185, 129, 0.22);
+      }
 
       h3 {
-        margin-bottom: 1rem;
-        font-size: 1.3rem;
+        margin: 0 0 1rem;
+        font-size: clamp(1.1rem, 3vw, 1.3rem);
         color: #38bdf8;
+        line-height: 1.4;
       }
 
       p {
         margin: 0.5rem 0;
         font-family: monospace;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
       }
+    }
+
+    .actions-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 0.5rem;
     }
   }
 
   button {
-    margin-top: 2rem;
-    padding: 0.75rem 1.5rem;
-    font-size: 1.2rem;
+    width: min(100%, 240px);
+    padding: 0.9rem 1.5rem;
+    font-size: 1.1rem;
     border-radius: 8px;
     border: none;
     background-color: #10b981;
@@ -92,6 +118,17 @@
 
     &:hover {
       background-color: #059669;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .game-win-container {
+    margin: 1rem;
+    border-radius: 10px;
+
+    .stats-summary {
+      grid-template-columns: 1fr;
     }
   }
 }

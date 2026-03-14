@@ -54,13 +54,6 @@ export class WinnerComponent implements OnInit {
       this.soundService.playGameOver();
     }
 
-    // End game on backend
-    this.gameService
-      .endGame("completed", userTimeLeft, aiTimeLeft, this.resolvedWinner)
-      .subscribe({
-        next: () => {},
-        error: (e) => console.warn("end-game failed:", e),
-      });
 
     this.loggingService.logEvent("gameWin", {
       winner: this.resolvedWinner,
@@ -89,6 +82,9 @@ export class WinnerComponent implements OnInit {
   startGame() {
     this.loggingService.logEvent("playAgainClicked", {});
     this.gameService.resetGame();
-    this.router.navigate(["/"]);
+    localStorage.removeItem("current_round_id");
+    localStorage.removeItem("current_game_id");
+    localStorage.setItem("new_game", "true");
+    this.router.navigate(["/game"]);
   }
 }

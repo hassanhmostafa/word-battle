@@ -14,7 +14,7 @@
   </p>
 
   <div class="stats-summary">
-    <h2>Game Summary</h2>
+    <h2 class="summary-title">Game Summary</h2>
 
     <div class="stat-group" [class.winner-highlight]="resolvedWinner === 'user'">
       <h3>User Stats <span *ngIf="resolvedWinner === 'user'">👑</span></h3>
@@ -40,6 +40,8 @@
       </p>
     </div>
 
-    <button (click)="startGame()">Play Again</button>
+    <div class="actions-row">
+      <button (click)="startGame()">Play Again</button>
+    </div>
   </div>
 </div>

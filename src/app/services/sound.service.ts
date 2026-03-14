@@ -11,19 +11,37 @@ export class SoundService {
     ["correct", "wrong", "win", "game-over"].forEach((name) => {
       const audio = new Audio(`assets/sounds/${name}.wav`);
       audio.preload = "auto";
+      audio.load();
       this.audioCache.set(name, audio);
     });
   }
 
-  play(name: string) {
-    const cachedAudio = this.audioCache.get(name);
-    const audio = cachedAudio ? cachedAudio.cloneNode(true) as HTMLAudioElement : new Audio(`assets/sounds/${name}.wav`);
-    audio.preload = "auto";
-    audio.currentTime = 0;
-    audio.play().catch((error) => {
-      console.error(`Error playing sound '${name}':`, error);
-    });
+  private getOrCreateAudio(name: string): HTMLAudioElement {
+    let audio = this.audioCache.get(name);
+    if (!audio) {
+      audio = new Audio(`assets/sounds/${name}.wav`);
+      audio.preload = "auto";
+      audio.load();
+      this.audioCache.set(name, audio);
+    }
+    return audio;
   }
+
+  play(name: string) {
+    const audio = this.getOrCreateAudio(name);
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+    } catch {}
+
+    const playPromise = audio.play();
+    if (playPromise) {
+      playPromise.catch((error) => {
+        console.error(`Error playing sound '${name}':`, error);
+      });
+    }
+  }
+
 
   playCorrect() {
     this.play("correct");

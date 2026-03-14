@@ -170,7 +170,7 @@
 /* Reserved commentary area to prevent layout jumping */
 .commentary-slot {
   min-height: 72px;
-  margin: 8px 0;
+  margin: 4px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -224,8 +224,8 @@
 
 /* Reserved inline feedback commentary area to prevent layout jumping */
 .feedback-commentary-slot {
-  min-height: 44px;
-  margin-top: 6px;
+  min-height: 52px;
+  margin-top: 2px;
   display: flex;
   align-items: flex-start;
   justify-content: center;

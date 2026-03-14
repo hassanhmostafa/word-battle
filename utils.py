@@ -848,12 +848,15 @@ def words_are_equivalent(
 # ADAPTIVE DIFFICULTY SYSTEM (3 LEVELS)
 # ============================================================================
 
-# ✅ UPDATED: 9 difficulty levels (was 3)
+# ✅ UPDATED: 6 difficulty levels
 DIFFICULTY_LEVELS = [
-    "easy1", "easy2", "easy3",
-    "medium1", "medium2", "medium3",
-    "hard1", "hard2", "hard3"
+    "easy1", "easy2",
+    "medium1", "medium2",
+    "hard1", "hard2"
 ]
+
+TOTAL_ROUNDS = 12
+CATEGORY_LIMIT = 2
 
 def get_current_difficulty(db, game_id: int) -> str:
     game = db.execute(
@@ -1006,7 +1009,7 @@ def select_word_for_round(
     prompt = f"""You are a word selection referee for a word-guessing game.
 
 GAME STATE:
-- Round: {current_round} of 18
+- Round: {current_round} of 12
 - Category: {category}
 - Difficulty: {difficulty}
 - Words already used this game: {json.dumps(used_word_list) if used_word_list else "none yet"}
@@ -1107,7 +1110,7 @@ def get_or_create_game(db, user_id: int, username: str, difficulty: str, new_gam
         (user_id,)
     ).fetchone()
 
-    if game and (game['total_rounds'] or 0) < 18:
+    if game and (game['total_rounds'] or 0) < TOTAL_ROUNDS:
         print(f"📎 Resuming existing game: game_id={game['game_id']}")
         return game['game_id']
 

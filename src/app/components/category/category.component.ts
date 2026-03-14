@@ -14,7 +14,7 @@ export class CategoryComponent {
     food: 0,
     place: 0,
   };
-  @Input() CATEGORY_LIMIT: number = 3;
+  @Input() CATEGORY_LIMIT: number = 2;
 
   @Output() categorySelected = new EventEmitter<string>();
   categories = ["animal", "food", "place"];

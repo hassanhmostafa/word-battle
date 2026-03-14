@@ -47,22 +47,22 @@ export class GameComponent {
 
   currentAICategory: string;
 
-  CATEGORY_LIMIT = 3;
+  CATEGORY_LIMIT = 2;
 
   roundNumber = 1;
 
   // ✅ Dynamic difficulty (updated by backend)
   currentDifficulty: string = "easy1";
 
-  // Odd rounds (1,3,5,...,17): AI describes, user guesses → isUserGuess = TRUE
-  // Even rounds (2,4,6,...,18): User describes, AI guesses → isUserGuess = FALSE
+  // Odd rounds (1,3,5,...,11): AI describes, user guesses → isUserGuess = TRUE
+  // Even rounds (2,4,6,...,12): User describes, AI guesses → isUserGuess = FALSE
   get isUserGuess(): boolean {
     return this.roundNumber % 2 === 1;
   }
 
-  // ✅ Move to next round or end game after 18 rounds
+  // ✅ Move to next round or end game after 12 rounds
   nextRound() {
-    if (this.roundNumber < 18) {
+    if (this.roundNumber < 12) {
       this.roundNumber++;
       console.log("Moving to round", this.roundNumber);
       console.log(
@@ -78,7 +78,7 @@ export class GameComponent {
         console.log("New AI category:", this.currentAICategory);
       }
     } else {
-      // ── Game finished (18 rounds completed) ──
+      // ── Game finished (12 rounds completed) ──
       const userTimeLeft = this.gameService.userGuessTimeLeft;
       const aiTimeLeft = this.gameService.aiGuessTimeLeft;
 

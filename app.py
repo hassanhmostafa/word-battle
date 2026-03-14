@@ -152,7 +152,7 @@ def start_game():
     
     current_difficulty = get_current_difficulty(db, game_id)
     
-    logger.info(f"Game {game_id}, Round {round_number}/18, Difficulty: {current_difficulty}, new_game={new_game}")
+    logger.info(f"Game {game_id}, Round {round_number}/12, Difficulty: {current_difficulty}, new_game={new_game}")
 
     secret_word = select_word_for_round(db, game_id, category, current_difficulty, WORD_DATA)
     
@@ -663,7 +663,7 @@ def get_word():
     
     current_difficulty = get_current_difficulty(db, game_id)
     
-    logger.info(f"Game {game_id}, Round {round_number}/18, Difficulty: {current_difficulty} (get-word), new_game={new_game}")
+    logger.info(f"Game {game_id}, Round {round_number}/12, Difficulty: {current_difficulty} (get-word), new_game={new_game}")
 
     secret_word = select_word_for_round(db, game_id, category, current_difficulty, WORD_DATA)
     
@@ -746,7 +746,7 @@ def get_commentary():
     if context.get("attempt"):
         context_parts.append(f"Attempt #{context['attempt']}")
     if context.get("round"):
-        context_parts.append(f"Round {context['round']} of 18")
+        context_parts.append(f"Round {context['round']} of 12")
     if context.get("seconds_left"):
         context_parts.append(f"{context['seconds_left']} seconds remaining")
 
@@ -856,11 +856,11 @@ def end_game():
             (game_id,)
         ).fetchone()
 
-        print(f"📈 Progress: {game_data['total_rounds']}/18 rounds, difficulty: {game_data['current_difficulty']}")
+        print(f"📈 Progress: {game_data['total_rounds']}/12 rounds, difficulty: {game_data['current_difficulty']}")
 
-        # ── Check if this is the last round (18) or if user quit ──
-        if current_round_number == 18 or outcome == 'quit':
-            final_outcome = 'completed' if current_round_number == 18 else 'quit'
+        # ── Check if this is the last round (12) or if user quit ──
+        if current_round_number == 12 or outcome == 'quit':
+            final_outcome = 'completed' if current_round_number == 12 else 'quit'
 
             if not winner and user_time_left is not None and ai_time_left is not None:
                 if user_time_left > ai_time_left:
@@ -899,7 +899,7 @@ def end_game():
             "status": "ok",
             "game_ended": False,
             "rounds_completed": current_round_number,
-            "rounds_remaining": 18 - current_round_number,
+            "rounds_remaining": 12 - current_round_number,
             "next_difficulty": next_diff
         })
 

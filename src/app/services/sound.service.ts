@@ -6,6 +6,8 @@ import { Injectable } from "@angular/core";
 })
 export class SoundService {
   private readonly audioCache = new Map<string, HTMLAudioElement>();
+  private isPrimed = false;
+  private isPriming = false;
 
   constructor() {
     ["correct", "wrong", "win", "game-over"].forEach((name) => {
@@ -27,11 +29,53 @@ export class SoundService {
     return audio;
   }
 
+  primeFromUserGesture(): void {
+    if (this.isPrimed || this.isPriming) {
+      return;
+    }
+
+    this.isPriming = true;
+
+    const audios = Array.from(this.audioCache.values());
+    audios.forEach((audio) => {
+      try {
+        audio.muted = true;
+        audio.currentTime = 0;
+        const playPromise = audio.play();
+
+        if (playPromise) {
+          playPromise
+            .then(() => {
+              try {
+                audio.pause();
+                audio.currentTime = 0;
+                audio.muted = false;
+              } catch {}
+            })
+            .catch(() => {
+              try {
+                audio.muted = false;
+                audio.currentTime = 0;
+              } catch {}
+            });
+        } else {
+          audio.muted = false;
+          audio.currentTime = 0;
+        }
+      } catch {}
+    });
+
+    this.isPrimed = true;
+    this.isPriming = false;
+  }
+
   play(name: string) {
     const audio = this.getOrCreateAudio(name);
+
     try {
       audio.pause();
       audio.currentTime = 0;
+      audio.muted = false;
     } catch {}
 
     const playPromise = audio.play();
@@ -41,7 +85,6 @@ export class SoundService {
       });
     }
   }
-
 
   playCorrect() {
     this.play("correct");

@@ -252,6 +252,9 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
     // Lock the button immediately
     this.isSubmitting = true;
 
+    // Prime audio on the user's first actual interaction so the first result sound is not blocked.
+    this.soundService.primeFromUserGesture();
+
     // Pause timer while processing guess
     this.pauseTimer();
 

@@ -208,6 +208,9 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
     const durationMs = Date.now() - this.descriptionStartTime;
 
+    // Prime audio on the user's first actual interaction so the first result sound is not blocked.
+    this.soundService.primeFromUserGesture();
+
     this.isThinking = true;
     this.isHintPhase = false;
 
@@ -227,6 +230,9 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.userHint.trim()) return;
 
     this.hintUsed++;
+
+    // Prime audio on the user's actual interaction before the result comes back.
+    this.soundService.primeFromUserGesture();
 
     this.loggingService.logEvent("hintProvidedByUser", {
       roundNumber: this.roundNumber,

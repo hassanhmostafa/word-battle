@@ -32,9 +32,11 @@
       </div>
     </div>
 
-    <!-- AI Commentary — INLINE under feedback -->
-    <div *ngIf="feedbackCommentary" class="feedback-commentary" [ngClass]="feedbackCommentaryType">
-      🎙️ {{ feedbackCommentary }}
+    <div class="feedback-commentary-slot">
+      <!-- AI Commentary — INLINE under feedback -->
+      <div *ngIf="feedbackCommentary" class="feedback-commentary" [ngClass]="feedbackCommentaryType">
+        🎙️ {{ feedbackCommentary }}
+      </div>
     </div>
 
     <!-- Word description -->

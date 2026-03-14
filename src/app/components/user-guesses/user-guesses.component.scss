@@ -222,9 +222,18 @@
   }
 }
 
+/* Reserved inline feedback commentary area to prevent layout jumping */
+.feedback-commentary-slot {
+  min-height: 44px;
+  margin-top: 6px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
 /* INLINE — correct/wrong guess reactions, appears right under the feedback */
 .feedback-commentary {
-  margin-top: 6px;
+  margin-top: 0;
   padding: 8px 14px;
   border-radius: 8px;
   font-size: 0.9rem;

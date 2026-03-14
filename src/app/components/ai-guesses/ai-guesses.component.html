@@ -26,9 +26,11 @@
     </div>
   </div>
 
-  <!-- AI Commentary (correct/wrong guess reactions) -->
-  <div *ngIf="feedbackCommentary" class="feedback-commentary" [ngClass]="feedbackCommentaryType">
-    🎙️ {{ feedbackCommentary }}
+  <div class="feedback-commentary-slot">
+    <!-- AI Commentary (correct/wrong guess reactions) -->
+    <div *ngIf="feedbackCommentary" class="feedback-commentary" [ngClass]="feedbackCommentaryType">
+      🎙️ {{ feedbackCommentary }}
+    </div>
   </div>
 
   <div class="selected-word" *ngIf="correctWord">

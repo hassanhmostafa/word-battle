@@ -34,6 +34,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
   // UI state
   isThinking: boolean = false;
+  isSubmitting: boolean = false;
   isHintPhase: boolean = false;
 
   // Hint usage

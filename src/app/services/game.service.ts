@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, throwError } from "rxjs";
 import { tap } from "rxjs/operators";
-export const INITIAL_TIME = 240;
+export const INITIAL_TIME = 150;
 
 interface GameResponse {
   current_difficulty: string;

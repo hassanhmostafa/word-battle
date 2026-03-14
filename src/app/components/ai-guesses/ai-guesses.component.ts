@@ -297,8 +297,8 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
             this.timerChanged.emit({ aiGuessTimeDiff: bonus });
 
             this.feedback = `Correct! The AI guessed it from the AI-generated description. +${bonus}s`;
-            this.soundService.playCorrect();
             this.gameService.aiStats.correct++;
+            this.soundService.playCorrect();
             this.endRoundAndAdvance("win");
           } else {
             this.localWrongGuesses++;

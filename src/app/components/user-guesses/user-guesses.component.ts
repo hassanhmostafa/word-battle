@@ -327,7 +327,6 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
           this.localWrongGuesses++;
           this.gameService.userStats.wrong++;
-          this.soundService.playWrong();
 
           this.isCorrect = false;
           this.isIncorrect = true;
@@ -357,6 +356,7 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
             });
 
             this.feedback = "You have used all your guesses! The correct word was: " + this.correctWord;
+            this.soundService.playWrong();
 
             this.commentaryService.generate(
               "The player used all 3 guesses and failed to guess the word.",
@@ -372,6 +372,7 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
           } else {
             this.feedback = "Wrong! Try again. -5 seconds";
+            this.soundService.playWrong();
 
             this.commentaryService.generate(
               "The player guessed wrong. They have more attempts left.",

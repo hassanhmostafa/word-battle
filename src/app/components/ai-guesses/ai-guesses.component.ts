@@ -416,6 +416,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
             this.gameService.aiStats.correct++;
             this.isHintPhase = false;
             this.isThinking = false;
+            this.isSubmitting = false;
 
             this.commentaryService.generate(
               "The AI guessed the word correctly!",
@@ -433,6 +434,10 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
             this.localWrongGuesses++;
             this.isThinking = false;
+
+            if (isHint) {
+              this.isSubmitting = false;
+            }
 
             if (this.localWrongGuesses === 2) {
               this.commentaryService.generate(

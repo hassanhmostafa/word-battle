@@ -87,12 +87,9 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
   // Track if round result is being shown (waiting before advancing)
   showingResult: boolean = false;
 
-  // Commentary
+  // Commentary — single shared slot for all comment types
   commentaryMessage: string = "";
   commentaryType: 'positive' | 'negative' | 'neutral' | 'warning' = 'neutral';
-
-  feedbackCommentary: string = "";
-  feedbackCommentaryType: 'positive' | 'negative' | 'neutral' | 'warning' = 'neutral';
 
   constructor(
     public gameService: GameService,
@@ -120,20 +117,16 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
   // ── Commentary helpers ──
 
-  private showCommentary(msg: string, type: 'positive' | 'negative' | 'neutral' | 'warning') {
+  private showCommentary(msg: string, type: 'positive' | 'negative' | 'neutral' | 'warning', durationMs: number = 5000) {
     this.commentaryMessage = msg;
     this.commentaryType = type;
     setTimeout(() => {
       if (this.commentaryMessage === msg) this.commentaryMessage = "";
-    }, 5000);
+    }, durationMs);
   }
 
   private showFeedbackCommentary(msg: string, type: 'positive' | 'negative' | 'neutral' | 'warning') {
-    this.feedbackCommentary = msg;
-    this.feedbackCommentaryType = type;
-    setTimeout(() => {
-      if (this.feedbackCommentary === msg) this.feedbackCommentary = "";
-    }, 6000);
+    this.showCommentary(msg, type, 6000);
   }
 
   // ── Timer ──
@@ -348,7 +341,6 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
     this.refereeErrorMsg = "";
     this.refereeViolations = [];
     this.feedback = "";
-    this.feedbackCommentary = "";
     this.aiGuessChecked = false;
     this.isAiGuessCorrect = false;
     this.isThinking = true;
@@ -602,7 +594,6 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
     this.roundEnded = false;
     this.showingResult = false;
     this.commentaryMessage = "";
-    this.feedbackCommentary = "";
     this.aiDescriptionOverride = false;
     this.aiGeneratedDescription = "";
     this.isGeneratingAiDescription = false;

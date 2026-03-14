@@ -66,13 +66,9 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
   // Prevents double-clicking Submit Guess while waiting for response
   isSubmitting: boolean = false;
 
-  // Commentary — top bubble (round start, skip, hint)
+  // Commentary — single shared slot for all comment types
   commentaryMessage: string = "";
   commentaryType: 'positive' | 'negative' | 'neutral' | 'warning' = 'neutral';
-
-  // Commentary — inline with feedback (correct/wrong guess reactions)
-  feedbackCommentary: string = "";
-  feedbackCommentaryType: 'positive' | 'negative' | 'neutral' | 'warning' = 'neutral';
 
   constructor(
     public gameService: GameService,
@@ -99,20 +95,16 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
   // ── Commentary helpers ──
 
-  private showCommentary(msg: string, type: 'positive' | 'negative' | 'neutral' | 'warning') {
+  private showCommentary(msg: string, type: 'positive' | 'negative' | 'neutral' | 'warning', durationMs: number = 5000) {
     this.commentaryMessage = msg;
     this.commentaryType = type;
     setTimeout(() => {
       if (this.commentaryMessage === msg) this.commentaryMessage = "";
-    }, 5000);
+    }, durationMs);
   }
 
   private showFeedbackCommentary(msg: string, type: 'positive' | 'negative' | 'neutral' | 'warning') {
-    this.feedbackCommentary = msg;
-    this.feedbackCommentaryType = type;
-    setTimeout(() => {
-      if (this.feedbackCommentary === msg) this.feedbackCommentary = "";
-    }, 6000);
+    this.showCommentary(msg, type, 6000);
   }
 
   // ── Timer: only USER's clock runs in this mode ──
@@ -196,7 +188,6 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
     this.roundEnded = false;
     this.isSubmitting = false;  // reset lock on new round
     this.commentaryMessage = "";
-    this.feedbackCommentary = "";
 
     this.isLoading = true;
 
@@ -265,7 +256,6 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
     this.pauseTimer();
 
     // Clear previous feedback commentary
-    this.feedbackCommentary = "";
 
     this.gameService.checkGuess(roundId, guess, durationMs).subscribe({
       next: (res) => {

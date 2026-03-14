@@ -222,45 +222,6 @@
   }
 }
 
-/* Reserved inline feedback commentary area to prevent layout jumping */
-.feedback-commentary-slot {
-  min-height: 52px;
-  margin-top: 2px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-/* INLINE — correct/wrong guess reactions, appears right under the feedback */
-.feedback-commentary {
-  margin-top: 0;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-style: italic;
-  font-weight: 500;
-  animation: fadeInSlide 0.3s ease-out;
-
-  &.positive {
-    background-color: #d4edda;
-    color: #155724;
-  }
-
-  &.negative {
-    background-color: #f8d7da;
-    color: #721c24;
-  }
-
-  &.neutral {
-    background-color: #e2e3e5;
-    color: #383d41;
-  }
-
-  &.warning {
-    background-color: #fff3cd;
-    color: #856404;
-  }
-}
 
 @keyframes fadeInSlide {
   from {

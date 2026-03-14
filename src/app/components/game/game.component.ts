@@ -46,6 +46,7 @@ export class GameComponent {
   };
 
   currentAICategory: string;
+  selectedPairCategory: string = "";
 
   CATEGORY_LIMIT = 2;
 
@@ -74,8 +75,8 @@ export class GameComponent {
       );
 
       if (!this.isUserGuess) {
-        this.currentAICategory = this.getRandomCategory();
-        console.log("New AI category:", this.currentAICategory);
+        this.currentAICategory = this.selectedPairCategory;
+        console.log("Reusing paired category for AI round:", this.currentAICategory);
       }
     } else {
       // ── Game finished (12 rounds completed) ──
@@ -136,21 +137,13 @@ export class GameComponent {
     console.log("📊 Difficulty updated to:", newDifficulty);
   }
 
-  getRandomCategory(): string {
-    const categories = Object.keys(this.aiGuessCategoryUsage);
-    const availableCategories = categories.filter(
-      (category) => this.aiGuessCategoryUsage[category] < this.CATEGORY_LIMIT
-    );
-    console.log("Available categories for AI:", availableCategories);
-    if (availableCategories.length === 0) {
-      throw new Error("No available categories left for AI to guess.");
-    }
-    const randomIndex = Math.floor(Math.random() * availableCategories.length);
-    const selectedCategory = availableCategories[randomIndex];
-    console.log("Selected category for AI:", selectedCategory);
-    this.aiGuessCategoryUsage[selectedCategory]++;
-    console.log("AI category usage after selection:", this.aiGuessCategoryUsage);
-    return selectedCategory;
+  setSelectedPairCategory(category: string): void {
+    this.selectedPairCategory = category;
+    this.currentAICategory = category;
+    this.aiGuessCategoryUsage[category] =
+      (this.aiGuessCategoryUsage[category] || 0) + 1;
+    console.log("Selected paired category:", category);
+    console.log("AI category usage after pairing:", this.aiGuessCategoryUsage);
   }
 
   onTimerChanged(event: {

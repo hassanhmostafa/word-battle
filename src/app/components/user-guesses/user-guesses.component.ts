@@ -43,6 +43,7 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
   }>();
   @Output() roundCompleted = new EventEmitter<void>();
   @Output() difficultyChanged = new EventEmitter<string>();
+  @Output() categoryChosen = new EventEmitter<string>();
 
   // ── TIMER ──
   private userGuessTimer: any = null;
@@ -174,6 +175,7 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
   onCategorySelected(category: string) {
     this.currentCategory = category;
+    this.categoryChosen.emit(category);
     this.pauseTimer();
     this.startNewRound();
   }

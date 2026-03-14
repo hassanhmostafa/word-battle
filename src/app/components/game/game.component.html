@@ -29,6 +29,7 @@
       (gameOverEvent)="onGameOver()"
       [isAiGuessMode]="false"
       (difficultyChanged)="updateDifficulty($event)"
+      (categoryChosen)="setSelectedPairCategory($event)"
     ></app-user-guesses>
   </ng-container>
 </div>

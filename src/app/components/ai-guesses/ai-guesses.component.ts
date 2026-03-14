@@ -37,6 +37,10 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
   isSubmitting: boolean = false;
   isHintPhase: boolean = false;
 
+  get isHintThinking(): boolean {
+    return this.isHintPhase && (this.isSubmitting || this.isThinking);
+  }
+
   // Hint usage
   hintUsed: number = 0;
 
@@ -213,6 +217,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
     this.soundService.primeFromUserGesture();
 
     this.isThinking = true;
+    this.isSubmitting = false;
     this.isHintPhase = false;
 
     this.loggingService.logEvent("aiGuessRoundStarted", {
@@ -231,6 +236,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.userHint.trim()) return;
 
     this.isSubmitting = true;
+    this.isThinking = true;
     this.hintUsed++;
 
     // Prime audio on the user's actual interaction before the result comes back.

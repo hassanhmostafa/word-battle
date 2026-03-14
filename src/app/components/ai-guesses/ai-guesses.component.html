@@ -83,7 +83,7 @@
   <div *ngIf="isHintPhase" class="hint-input">
     <textarea
       [(ngModel)]="userHint"
-      [disabled]="isSubmitting || isThinking"
+      [disabled]="isHintThinking"
       placeholder="Write a hint for the AI..."
       rows="3"
     ></textarea>
@@ -91,9 +91,9 @@
       <button
         class="guess-button"
         (click)="submitHint()"
-        [disabled]="isSubmitting || isThinking || !userHint.trim()"
+        [disabled]="isHintThinking || !userHint.trim()"
       >
-        {{ (isSubmitting || isThinking) ? 'Thinking...' : 'Submit Hint' }}
+        {{ isHintThinking ? 'Thinking...' : 'Submit Hint' }}
       </button>
     </div>
   </div>

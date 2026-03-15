@@ -7,25 +7,27 @@
   padding: 40px 20px;
   max-width: 900px;
   margin: 0 auto;
+  color: #d3d3d3;
+  font-family: 'Orbitron', sans-serif;
 }
 
 h2 {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #333;
+  color: #00ffcc;
   text-align: center;
+  text-shadow: 0 0 5px #00ffcc, 0 0 10px rgb(0 255 204 / 45%);
 }
 
 p {
   font-size: 1.1rem;
-  color: #666;
+  color: #d3d3d3;
   text-align: center;
   margin-bottom: 40px;
   line-height: 1.6;
   max-width: 600px;
 }
 
-/* Difficulty Selection Styles */
 .difficulty-selection {
   width: 100%;
   margin-bottom: 40px;
@@ -33,7 +35,7 @@ p {
 
 .difficulty-selection h3 {
   font-size: 1.5rem;
-  color: #333;
+  color: #00ffcc;
   text-align: center;
   margin-bottom: 25px;
   font-weight: 600;
@@ -51,26 +53,26 @@ p {
   min-width: 220px;
   max-width: 280px;
   padding: 30px 20px;
-  border: 3px solid #e0e0e0;
+  border: 2px solid rgb(4 255 204 / 35%);
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: white;
+  background: #1e293b;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 12px rgb(49 207 176 / 24%);
 }
 
 .difficulty-card:hover {
-  border-color: #667eea;
+  border-color: #04ffcc;
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
+  box-shadow: 0 0 16px rgb(49 207 176 / 38%);
 }
 
 .difficulty-card.selected {
-  border-color: #667eea;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  border-color: #04ffcc;
+  background: linear-gradient(135deg, rgb(4 255 204 / 22%) 0%, rgb(30 41 59 / 100%) 100%);
+  color: #ffffff;
+  box-shadow: 0 0 18px rgb(49 207 176 / 42%);
   transform: translateY(-4px);
 }
 
@@ -88,32 +90,34 @@ p {
   font-weight: bold;
   margin-bottom: 10px;
   display: block;
+  color: #00ffcc;
 }
 
 .difficulty-description {
   font-size: 0.95rem;
-  color: #666;
+  color: #d3d3d3;
   line-height: 1.5;
 }
 
-/* Button Styles */
 button {
   padding: 16px 50px;
   font-size: 1.2rem;
   font-weight: 600;
   color: white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #0da788;
   border: none;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 0 10px rgb(49 207 176 / 36%);
   margin-top: 20px;
+  font-family: 'Orbitron', sans-serif;
 }
 
 button:hover:not(.disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  background-color: #0a7f6c;
+  box-shadow: 0 0 14px rgb(49 207 176 / 44%);
 }
 
 button:active:not(.disabled) {
@@ -121,12 +125,11 @@ button:active:not(.disabled) {
 }
 
 button.disabled {
-  background: #ccc;
+  background: #4b5563;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .difficulty-cards {
     flex-direction: column;
@@ -148,15 +151,42 @@ button.disabled {
 }
 
 .game-info {
-  color: white;
+  color: #d3d3d3;
 }
 
 .game-info-title {
-  color: aqua;
+  color: #00ffcc;
 }
-.feature-name{
-  color: #6b78db;
+
+.game-info-title strong {
+  color: #04ffcc;
 }
-.title{
-  color: aqua;
+
+.feature-name {
+  color: #00ffcc;
+}
+
+.title {
+  color: #00ffcc;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 640px;
+  margin: 10px auto 0;
+}
+
+.features > div {
+  background-color: #1e293b;
+  border: 1px solid rgb(4 255 204 / 25%);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 0 12px rgb(49 207 176 / 20%);
+}
+
+.start-button {
+  min-width: 220px;
 }

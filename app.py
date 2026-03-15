@@ -1022,45 +1022,61 @@ def analytics_data():
     outcome_breakdown = {r['outcome']: r['cnt'] for r in outcomes}
 
     avg_user_turn_duration = db.execute("""
-        SELECT AVG(a.duration_ms) / 1000.0
-        FROM Actions a
-        JOIN Rounds r ON r.round_id = a.round_id
-        WHERE r.game_mode = 'user_guesses'
-          AND a.actor = 'user'
-          AND a.action_type = 'guess'
-          AND a.duration_ms IS NOT NULL
+        SELECT AVG(round_guess_ms) / 1000.0
+        FROM (
+            SELECT r.round_id, SUM(a.duration_ms) AS round_guess_ms
+            FROM Rounds r
+            JOIN Actions a ON a.round_id = r.round_id
+            WHERE r.game_mode = 'user_guesses'
+              AND a.actor = 'user'
+              AND a.action_type = 'guess'
+              AND a.duration_ms IS NOT NULL
+            GROUP BY r.round_id
+        )
     """).fetchone()[0]
 
     user_turn_duration = db.execute("""
-        SELECT ROUND(AVG(a.duration_ms) / 1000.0, 1) as avg_sec,
+        SELECT ROUND(AVG(round_guess_ms) / 1000.0, 1) as avg_sec,
                COUNT(*) as cnt
-        FROM Actions a
-        JOIN Rounds r ON r.round_id = a.round_id
-        WHERE r.game_mode = 'user_guesses'
-          AND a.actor = 'user'
-          AND a.action_type = 'guess'
-          AND a.duration_ms IS NOT NULL
+        FROM (
+            SELECT r.round_id, SUM(a.duration_ms) AS round_guess_ms
+            FROM Rounds r
+            JOIN Actions a ON a.round_id = r.round_id
+            WHERE r.game_mode = 'user_guesses'
+              AND a.actor = 'user'
+              AND a.action_type = 'guess'
+              AND a.duration_ms IS NOT NULL
+            GROUP BY r.round_id
+        )
     """).fetchone()
 
     avg_ai_turn_duration = db.execute("""
-        SELECT AVG(a.duration_ms) / 1000.0
-        FROM Actions a
-        JOIN Rounds r ON r.round_id = a.round_id
-        WHERE r.game_mode = 'ai_guesses'
-          AND a.actor = 'user'
-          AND a.action_type = 'description'
-          AND a.duration_ms IS NOT NULL
+        SELECT AVG(round_thinking_ms) / 1000.0
+        FROM (
+            SELECT r.round_id, SUM(a.duration_ms) AS round_thinking_ms
+            FROM Rounds r
+            JOIN Actions a ON a.round_id = r.round_id
+            WHERE r.game_mode = 'ai_guesses'
+              AND a.actor = 'user'
+              AND a.action_type = 'description'
+              AND a.duration_ms IS NOT NULL
+            GROUP BY r.round_id
+        )
     """).fetchone()[0]
 
     ai_turn_duration = db.execute("""
-        SELECT ROUND(AVG(a.duration_ms) / 1000.0, 1) as avg_sec,
+        SELECT ROUND(AVG(round_thinking_ms) / 1000.0, 1) as avg_sec,
                COUNT(*) as cnt
-        FROM Actions a
-        JOIN Rounds r ON r.round_id = a.round_id
-        WHERE r.game_mode = 'ai_guesses'
-          AND a.actor = 'user'
-          AND a.action_type = 'description'
-          AND a.duration_ms IS NOT NULL
+        FROM (
+            SELECT r.round_id, SUM(a.duration_ms) AS round_thinking_ms
+            FROM Rounds r
+            JOIN Actions a ON a.round_id = r.round_id
+            WHERE r.game_mode = 'ai_guesses'
+              AND a.actor = 'user'
+              AND a.action_type = 'description'
+              AND a.duration_ms IS NOT NULL
+            GROUP BY r.round_id
+        )
     """).fetchone()
 
     round_outcomes = db.execute(

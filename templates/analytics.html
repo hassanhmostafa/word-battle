@@ -186,6 +186,10 @@
           <canvas id="chartDuration"></canvas>
         </div>
         <div class="chart-box">
+          <h3>Guess Accuracy (%)</h3>
+          <canvas id="chartAccuracy"></canvas>
+        </div>
+        <div class="chart-box">
           <h3>Difficulty Distribution</h3>
           <canvas id="chartDifficulty"></canvas>
         </div>
@@ -304,8 +308,8 @@
         // ── Charts ──
         // Winner pie
         makeChart('chartWinner', 'doughnut',
-          ['User', 'AI', 'Tie'],
-          [ov.user_wins, ov.ai_wins, ov.ties]
+          d.win_comparison.map(item => item.label),
+          d.win_comparison.map(item => item.value)
         );
 
         // Violations by type
@@ -317,10 +321,19 @@
         }
 
         // AI turn duration
-        if (d.ai_turn_duration && d.ai_turn_duration.avg_sec !== null) {
+        const aiTurnData = (d.turn_duration_comparison || []).find(item => item.side === 'ai');
+        if (aiTurnData && aiTurnData.avg_sec !== null) {
           makeChart('chartDuration', 'bar',
-            ['AI Turns'],
-            [d.ai_turn_duration.avg_sec]
+            [aiTurnData.label + ' Turns'],
+            [aiTurnData.avg_sec]
+          );
+        }
+
+        // Guess accuracy comparison
+        if (d.guess_accuracy_comparison && d.guess_accuracy_comparison.length) {
+          makeChart('chartAccuracy', 'bar',
+            d.guess_accuracy_comparison.map(item => item.label),
+            d.guess_accuracy_comparison.map(item => item.accuracy_pct)
           );
         }
 

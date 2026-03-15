@@ -1102,6 +1102,25 @@ def analytics_data():
         GROUP BY g.game_id ORDER BY violations DESC LIMIT 20
     """).fetchall()
 
+    user_accuracy_pct = round(user_correct / user_rounds_total * 100, 1) if user_rounds_total else 0
+    ai_accuracy_pct = round(ai_correct / ai_rounds_total * 100, 1) if ai_rounds_total else 0
+
+    win_comparison = [
+        {"side": "user", "label": "User", "value": user_wins},
+        {"side": "ai", "label": "AI", "value": ai_wins},
+        {"side": "tie", "label": "Tie", "value": ties},
+    ]
+
+    turn_duration_comparison = [
+        {"side": "user", "label": "User", "avg_sec": user_turn_duration["avg_sec"] if user_turn_duration else None, "count": user_turn_duration["cnt"] if user_turn_duration else 0},
+        {"side": "ai", "label": "AI", "avg_sec": ai_turn_duration["avg_sec"] if ai_turn_duration else None, "count": ai_turn_duration["cnt"] if ai_turn_duration else 0},
+    ]
+
+    guess_accuracy_comparison = [
+        {"side": "user", "label": "User", "correct": user_correct, "total": user_rounds_total, "accuracy_pct": user_accuracy_pct},
+        {"side": "ai", "label": "AI", "correct": ai_correct, "total": ai_rounds_total, "accuracy_pct": ai_accuracy_pct},
+    ]
+
     return jsonify({
         "overview": {
             "total_games": total_games,
@@ -1118,21 +1137,16 @@ def analytics_data():
             "avg_user_guesses_per_round": avg_user_guesses,
             "ai_correct_guesses": ai_correct,
             "ai_rounds_total": ai_rounds_total,
-            "ai_accuracy_pct": round(ai_correct / ai_rounds_total * 100, 1) if ai_rounds_total else 0,
+            "ai_accuracy_pct": ai_accuracy_pct,
             "user_correct_guesses": user_correct,
             "user_rounds_total": user_rounds_total,
-            "user_accuracy_pct": round(user_correct / user_rounds_total * 100, 1) if user_rounds_total else 0,
+            "user_accuracy_pct": user_accuracy_pct,
         },
         "game_outcome_breakdown": outcome_breakdown,
         "round_outcome_breakdown": round_outcome_breakdown,
-        "user_turn_duration": {
-            "avg_sec": user_turn_duration["avg_sec"] if user_turn_duration else None,
-            "count": user_turn_duration["cnt"] if user_turn_duration else 0,
-        },
-        "ai_turn_duration": {
-            "avg_sec": ai_turn_duration["avg_sec"] if ai_turn_duration else None,
-            "count": ai_turn_duration["cnt"] if ai_turn_duration else 0,
-        },
+        "win_comparison": win_comparison,
+        "turn_duration_comparison": turn_duration_comparison,
+        "guess_accuracy_comparison": guess_accuracy_comparison,
         "violations_by_type": [
             {"type": r["violation_type"], "count": r["cnt"]}
             for r in violations_by_type

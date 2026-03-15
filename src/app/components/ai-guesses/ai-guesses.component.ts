@@ -581,7 +581,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
     setTimeout(() => {
       this.showingResult = false;
       this.roundCompleted.emit();
-    }, 4500);
+    }, 3000);
   }
 
   private parseBackendError(err: any): { message?: string; violations?: string[] } {

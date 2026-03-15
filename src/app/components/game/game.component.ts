@@ -5,6 +5,7 @@ import { UserGuessesComponent } from "../user-guesses/user-guesses.component";
 import { AiGuessesComponent } from "../ai-guesses/ai-guesses.component";
 import { LoggingService } from "../../services/logging.service";
 import { GameService } from "../../services/game.service";
+import { SoundService } from "../../services/sound.service";
 
 @Component({
   selector: "app-game",
@@ -17,7 +18,8 @@ export class GameComponent {
   constructor(
     private loggingService: LoggingService,
     private router: Router,
-    public gameService: GameService
+    public gameService: GameService,
+    private soundService: SoundService
   ) {
     this.currentAICategory = "";
 
@@ -118,8 +120,7 @@ export class GameComponent {
           },
         });
 
-      this.playWinSound();
-      this.playApplauseSound();
+      this.soundService.playWin();
 
       this.router.navigate(["/winner"], {
         queryParams: {
@@ -227,13 +228,4 @@ export class GameComponent {
     });
   }
 
-  playWinSound() {
-    const audio = new Audio("assets/sounds/win.wav");
-    audio.play();
-  }
-
-  playApplauseSound() {
-    const audio = new Audio("assets/sounds/applause.wav");
-    audio.play();
-  }
 }

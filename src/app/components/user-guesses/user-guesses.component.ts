@@ -306,11 +306,11 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
             (msg) => this.showFeedbackCommentary(msg, 'positive')
           );
 
-          // Wait 4.5s so user can read feedback + commentary before advancing
+          // Wait 3s so user can read feedback + commentary before advancing
           setTimeout(() => {
             this.currentCategory = "";
             this.roundCompleted.emit();
-          }, 4500);
+          }, 3000);
 
         } else {
           this.loggingService.logEvent("userGuessSubmitted", {
@@ -364,11 +364,11 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
               (msg) => this.showFeedbackCommentary(msg, 'negative')
             );
 
-            // Wait 4.5s so user can read feedback + commentary before advancing
+            // Wait 3s so user can read feedback + commentary before advancing
             setTimeout(() => {
               this.currentCategory = "";
               this.roundCompleted.emit();
-            }, 4500);
+            }, 3000);
 
           } else {
             this.feedback = "Wrong! Try again. -5 seconds";

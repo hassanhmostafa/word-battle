@@ -182,7 +182,7 @@
           <canvas id="chartViolations"></canvas>
         </div>
         <div class="chart-box">
-          <h3>Avg AI Turn Duration (seconds)</h3>
+          <h3>Turn Duration Comparison (seconds)</h3>
           <canvas id="chartDuration"></canvas>
         </div>
         <div class="chart-box">
@@ -320,12 +320,12 @@
           );
         }
 
-        // AI turn duration
-        const aiTurnData = (d.turn_duration_comparison || []).find(item => item.side === 'ai');
-        if (aiTurnData && aiTurnData.avg_sec !== null) {
+        // Turn duration comparison
+        const turnDurationData = (d.turn_duration_comparison || []).filter(item => item.avg_sec !== null);
+        if (turnDurationData.length) {
           makeChart('chartDuration', 'bar',
-            [aiTurnData.label + ' Turns'],
-            [aiTurnData.avg_sec]
+            turnDurationData.map(item => item.label),
+            turnDurationData.map(item => item.avg_sec)
           );
         }
 

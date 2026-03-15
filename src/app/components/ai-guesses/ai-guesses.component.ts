@@ -658,7 +658,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
     localStorage.removeItem("current_round_id");
     localStorage.removeItem("current_game_id");
     localStorage.removeItem("new_game");
-    this.router.navigate(["/"]);
+    window.location.href = "/";
   }
 
   nextRound() {

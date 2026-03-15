@@ -1022,29 +1022,45 @@ def analytics_data():
     outcome_breakdown = {r['outcome']: r['cnt'] for r in outcomes}
 
     avg_user_turn_duration = db.execute("""
-        SELECT AVG((julianday(ended_at) - julianday(started_at)) * 86400)
-        FROM Rounds
-        WHERE ended_at IS NOT NULL AND started_at IS NOT NULL AND game_mode = 'user_guesses'
+        SELECT AVG(a.duration_ms) / 1000.0
+        FROM Actions a
+        JOIN Rounds r ON r.round_id = a.round_id
+        WHERE r.game_mode = 'user_guesses'
+          AND a.actor = 'user'
+          AND a.action_type = 'guess'
+          AND a.duration_ms IS NOT NULL
     """).fetchone()[0]
 
     user_turn_duration = db.execute("""
-        SELECT ROUND(AVG((julianday(ended_at) - julianday(started_at)) * 86400), 1) as avg_sec,
+        SELECT ROUND(AVG(a.duration_ms) / 1000.0, 1) as avg_sec,
                COUNT(*) as cnt
-        FROM Rounds
-        WHERE ended_at IS NOT NULL AND started_at IS NOT NULL AND game_mode = 'user_guesses'
+        FROM Actions a
+        JOIN Rounds r ON r.round_id = a.round_id
+        WHERE r.game_mode = 'user_guesses'
+          AND a.actor = 'user'
+          AND a.action_type = 'guess'
+          AND a.duration_ms IS NOT NULL
     """).fetchone()
 
     avg_ai_turn_duration = db.execute("""
-        SELECT AVG((julianday(ended_at) - julianday(started_at)) * 86400)
-        FROM Rounds
-        WHERE ended_at IS NOT NULL AND started_at IS NOT NULL AND game_mode = 'ai_guesses'
+        SELECT AVG(a.duration_ms) / 1000.0
+        FROM Actions a
+        JOIN Rounds r ON r.round_id = a.round_id
+        WHERE r.game_mode = 'ai_guesses'
+          AND a.actor = 'user'
+          AND a.action_type = 'description'
+          AND a.duration_ms IS NOT NULL
     """).fetchone()[0]
 
     ai_turn_duration = db.execute("""
-        SELECT ROUND(AVG((julianday(ended_at) - julianday(started_at)) * 86400), 1) as avg_sec,
+        SELECT ROUND(AVG(a.duration_ms) / 1000.0, 1) as avg_sec,
                COUNT(*) as cnt
-        FROM Rounds
-        WHERE ended_at IS NOT NULL AND started_at IS NOT NULL AND game_mode = 'ai_guesses'
+        FROM Actions a
+        JOIN Rounds r ON r.round_id = a.round_id
+        WHERE r.game_mode = 'ai_guesses'
+          AND a.actor = 'user'
+          AND a.action_type = 'description'
+          AND a.duration_ms IS NOT NULL
     """).fetchone()
 
     round_outcomes = db.execute(

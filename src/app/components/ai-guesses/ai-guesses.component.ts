@@ -3,6 +3,7 @@ import { EMPTY } from "rxjs";
 import { switchMap, map } from "rxjs/operators";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
 import { GameService, INITIAL_TIME } from "../../services/game.service";
 import { GameHeaderComponent } from "../shared/game-header/game-header.component";
 import { LoggingService } from "../../services/logging.service";
@@ -98,6 +99,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     public gameService: GameService,
+    private router: Router,
     private loggingService: LoggingService,
     private soundService: SoundService,
     private commentaryService: CommentaryService
@@ -581,7 +583,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
     setTimeout(() => {
       this.showingResult = false;
       this.roundCompleted.emit();
-    }, 3000);
+    }, 2500);
   }
 
   private parseBackendError(err: any): { message?: string; violations?: string[] } {
@@ -647,12 +649,16 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
   goBack() {
     if (!this.roundEnded) {
       this.roundEnded = true;
+      this.pauseTimer();
       this.gameService.endRound("quit").subscribe({
         next: () => {},
         error: () => {},
       });
     }
-    window.location.href = "/llm-wordgame/";
+    localStorage.removeItem("current_round_id");
+    localStorage.removeItem("current_game_id");
+    localStorage.removeItem("new_game");
+    this.router.navigate(["/"]);
   }
 
   nextRound() {

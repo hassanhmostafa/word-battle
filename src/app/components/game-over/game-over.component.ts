@@ -99,6 +99,18 @@ export class GameOverComponent implements OnInit {
   startGame() {
     this.loggingService.logEvent("playAgainClicked", {});
     this.gameService.resetGame();
+    localStorage.removeItem("current_round_id");
+    localStorage.removeItem("current_game_id");
+    localStorage.setItem("new_game", "true");
+    this.router.navigate(["/game"]);
+  }
+
+  backToStart() {
+    this.loggingService.logEvent("backToStartClicked", { source: "game-over" });
+    this.gameService.resetGame();
+    localStorage.removeItem("current_round_id");
+    localStorage.removeItem("current_game_id");
+    localStorage.removeItem("new_game");
     this.router.navigate(["/"]);
   }
 }

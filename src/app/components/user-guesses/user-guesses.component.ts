@@ -306,11 +306,11 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
             (msg) => this.showFeedbackCommentary(msg, 'positive')
           );
 
-          // Wait 3s so user can read feedback + commentary before advancing
+          // Wait 2.5s so user can read feedback + commentary before advancing
           setTimeout(() => {
             this.currentCategory = "";
             this.roundCompleted.emit();
-          }, 3000);
+          }, 2500);
 
         } else {
           this.loggingService.logEvent("userGuessSubmitted", {
@@ -364,11 +364,11 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
               (msg) => this.showFeedbackCommentary(msg, 'negative')
             );
 
-            // Wait 3s so user can read feedback + commentary before advancing
+            // Wait 2.5s so user can read feedback + commentary before advancing
             setTimeout(() => {
               this.currentCategory = "";
               this.roundCompleted.emit();
-            }, 3000);
+            }, 2500);
 
           } else {
             this.feedback = "Wrong! Try again. -5 seconds";
@@ -467,7 +467,10 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
         error: () => {},
       });
     }
-    window.location.href = "/llm-wordgame/";
+    localStorage.removeItem("current_round_id");
+    localStorage.removeItem("current_game_id");
+    localStorage.removeItem("new_game");
+    this.router.navigate(["/"]);
   }
 
   nextRound() {

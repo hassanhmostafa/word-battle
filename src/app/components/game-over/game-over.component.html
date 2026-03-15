@@ -20,6 +20,9 @@
         <p><span class="label">Time Left:</span> {{ gameService.aiGuessTimeLeft > 0 ? gameService.aiGuessTimeLeft : 0 }}s</p>
       </div>
     </div>
-    <button (click)="startGame()">Play Again</button>
+    <div class="actions-row">
+      <button (click)="startGame()">Play Again</button>
+      <button (click)="backToStart()">Back to Start</button>
+    </div>
   </div>
 </div>

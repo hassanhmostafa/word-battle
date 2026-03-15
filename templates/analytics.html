@@ -182,7 +182,7 @@
           <canvas id="chartViolations"></canvas>
         </div>
         <div class="chart-box">
-          <h3>Avg Round Duration (seconds)</h3>
+          <h3>Avg User Turn Duration (seconds)</h3>
           <canvas id="chartDuration"></canvas>
         </div>
         <div class="chart-box">
@@ -287,12 +287,10 @@
         const cardDefs = [
           { value: ov.total_users,           label: 'Participants' },
           { value: ov.total_games,           label: 'Games Completed' },
-          { value: ov.total_rounds,          label: 'Rounds Completed' },
           { value: ov.user_wins,             label: 'User Wins' },
           { value: ov.ai_wins,               label: 'AI Wins' },
           { value: ov.ties,                  label: 'Ties' },
-          { value: (ov.avg_round_duration_sec ?? '—') + 's', label: 'Avg Round Duration' },
-          { value: ov.avg_user_guesses_per_round ?? '—', label: 'Avg Guesses / Round' },
+          { value: (ov.avg_user_turn_duration_sec ?? '—') + 's', label: 'Avg User Turn Duration' },
           { value: ov.ai_accuracy_pct + '%',   label: 'AI Guess Accuracy' },
           { value: ov.user_accuracy_pct + '%',  label: 'User Guess Accuracy' },
           { value: ov.total_violations,          label: 'Rule Violations' },
@@ -317,11 +315,11 @@
           );
         }
 
-        // Duration by mode
-        if (d.round_duration_by_mode.length) {
+        // User turn duration
+        if (d.user_turn_duration && d.user_turn_duration.avg_sec !== null) {
           makeChart('chartDuration', 'bar',
-            d.round_duration_by_mode.map(r => r.mode === 'user_guesses' ? 'User Guesses' : 'AI Guesses'),
-            d.round_duration_by_mode.map(r => r.avg_sec)
+            ['User Turns'],
+            [d.user_turn_duration.avg_sec]
           );
         }
 

@@ -1001,18 +1001,18 @@ def analytics_data():
     ).fetchall()
     outcome_breakdown = {r['outcome']: r['cnt'] for r in outcomes}
 
-    avg_round_duration = db.execute("""
+    avg_user_turn_duration = db.execute("""
         SELECT AVG((julianday(ended_at) - julianday(started_at)) * 86400)
-        FROM Rounds WHERE ended_at IS NOT NULL AND started_at IS NOT NULL
+        FROM Rounds
+        WHERE ended_at IS NOT NULL AND started_at IS NOT NULL AND game_mode = 'user_guesses'
     """).fetchone()[0]
 
-    round_duration_by_mode = db.execute("""
-        SELECT game_mode,
-               ROUND(AVG((julianday(ended_at) - julianday(started_at)) * 86400), 1) as avg_sec,
+    user_turn_duration = db.execute("""
+        SELECT ROUND(AVG((julianday(ended_at) - julianday(started_at)) * 86400), 1) as avg_sec,
                COUNT(*) as cnt
-        FROM Rounds WHERE ended_at IS NOT NULL AND started_at IS NOT NULL
-        GROUP BY game_mode
-    """).fetchall()
+        FROM Rounds
+        WHERE ended_at IS NOT NULL AND started_at IS NOT NULL AND game_mode = 'user_guesses'
+    """).fetchone()
 
     round_outcomes = db.execute(
         "SELECT outcome, COUNT(*) as cnt FROM Rounds WHERE ended_at IS NOT NULL GROUP BY outcome"
@@ -1100,7 +1100,7 @@ def analytics_data():
             "total_violations": total_violations,
             "total_checks": total_checks,
             "violation_rate_pct": round(total_violations / total_checks * 100, 1) if total_checks else 0,
-            "avg_round_duration_sec": round(avg_round_duration, 1) if avg_round_duration else None,
+            "avg_user_turn_duration_sec": round(avg_user_turn_duration, 1) if avg_user_turn_duration else None,
             "avg_user_guesses_per_round": avg_user_guesses,
             "ai_correct_guesses": ai_correct,
             "ai_rounds_total": ai_rounds_total,
@@ -1111,10 +1111,10 @@ def analytics_data():
         },
         "game_outcome_breakdown": outcome_breakdown,
         "round_outcome_breakdown": round_outcome_breakdown,
-        "round_duration_by_mode": [
-            {"mode": r["game_mode"], "avg_sec": r["avg_sec"], "count": r["cnt"]}
-            for r in round_duration_by_mode
-        ],
+        "user_turn_duration": {
+            "avg_sec": user_turn_duration["avg_sec"] if user_turn_duration else None,
+            "count": user_turn_duration["cnt"] if user_turn_duration else 0,
+        },
         "violations_by_type": [
             {"type": r["violation_type"], "count": r["cnt"]}
             for r in violations_by_type

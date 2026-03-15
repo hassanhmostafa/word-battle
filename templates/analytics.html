@@ -291,6 +291,7 @@
           { value: ov.ai_wins,               label: 'AI Wins' },
           { value: ov.ties,                  label: 'Ties' },
           { value: (ov.avg_user_turn_duration_sec ?? '—') + 's', label: 'Avg User Turn Duration' },
+          { value: (ov.avg_ai_turn_duration_sec ?? '—') + 's', label: 'Avg AI Turn Duration' },
           { value: ov.ai_accuracy_pct + '%',   label: 'AI Guess Accuracy' },
           { value: ov.user_accuracy_pct + '%',  label: 'User Guess Accuracy' },
           { value: ov.total_violations,          label: 'Rule Violations' },
@@ -315,11 +316,15 @@
           );
         }
 
-        // User turn duration
-        if (d.user_turn_duration && d.user_turn_duration.avg_sec !== null) {
+        // Turn duration comparison
+        if ((d.user_turn_duration && d.user_turn_duration.avg_sec !== null) ||
+            (d.ai_turn_duration && d.ai_turn_duration.avg_sec !== null)) {
           makeChart('chartDuration', 'bar',
-            ['User Turns'],
-            [d.user_turn_duration.avg_sec]
+            ['User Turns', 'AI Turns'],
+            [
+              d.user_turn_duration?.avg_sec ?? 0,
+              d.ai_turn_duration?.avg_sec ?? 0
+            ]
           );
         }
 

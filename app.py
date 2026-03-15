@@ -1014,6 +1014,19 @@ def analytics_data():
         WHERE ended_at IS NOT NULL AND started_at IS NOT NULL AND game_mode = 'user_guesses'
     """).fetchone()
 
+    avg_ai_turn_duration = db.execute("""
+        SELECT AVG((julianday(ended_at) - julianday(started_at)) * 86400)
+        FROM Rounds
+        WHERE ended_at IS NOT NULL AND started_at IS NOT NULL AND game_mode = 'ai_guesses'
+    """).fetchone()[0]
+
+    ai_turn_duration = db.execute("""
+        SELECT ROUND(AVG((julianday(ended_at) - julianday(started_at)) * 86400), 1) as avg_sec,
+               COUNT(*) as cnt
+        FROM Rounds
+        WHERE ended_at IS NOT NULL AND started_at IS NOT NULL AND game_mode = 'ai_guesses'
+    """).fetchone()
+
     round_outcomes = db.execute(
         "SELECT outcome, COUNT(*) as cnt FROM Rounds WHERE ended_at IS NOT NULL GROUP BY outcome"
     ).fetchall()
@@ -1101,6 +1114,7 @@ def analytics_data():
             "total_checks": total_checks,
             "violation_rate_pct": round(total_violations / total_checks * 100, 1) if total_checks else 0,
             "avg_user_turn_duration_sec": round(avg_user_turn_duration, 1) if avg_user_turn_duration else None,
+            "avg_ai_turn_duration_sec": round(avg_ai_turn_duration, 1) if avg_ai_turn_duration else None,
             "avg_user_guesses_per_round": avg_user_guesses,
             "ai_correct_guesses": ai_correct,
             "ai_rounds_total": ai_rounds_total,
@@ -1114,6 +1128,10 @@ def analytics_data():
         "user_turn_duration": {
             "avg_sec": user_turn_duration["avg_sec"] if user_turn_duration else None,
             "count": user_turn_duration["cnt"] if user_turn_duration else 0,
+        },
+        "ai_turn_duration": {
+            "avg_sec": ai_turn_duration["avg_sec"] if ai_turn_duration else None,
+            "count": ai_turn_duration["cnt"] if ai_turn_duration else 0,
         },
         "violations_by_type": [
             {"type": r["violation_type"], "count": r["cnt"]}

@@ -168,6 +168,65 @@ LETTER_HINT_RE = re.compile(
     re.IGNORECASE
 )
 
+_GENERIC_PHRASE_PATTERNS = [
+    r"^it is a thing[\.!\s]*$",
+    r"^it is a place[\.!\s]*$",
+    r"^it is an animal[\.!\s]*$",
+    r"^it is a person[\.!\s]*$",
+    r"^it is a food[\.!\s]*$",
+    r"^it is an object[\.!\s]*$",
+    r"^it is something[\.!\s]*$",
+    r"^it is nice[\.!\s]*$",
+    r"^it is good[\.!\s]*$",
+    r"^it is bad[\.!\s]*$",
+    r"^it has stuff[\.!\s]*$",
+    r"^people use it[\.!\s]*$",
+    r"^you can find it somewhere[\.!\s]*$",
+    r"^it is used for many things[\.!\s]*$",
+]
+
+_GENERIC_BROAD_TERMS = {
+    "thing", "place", "animal", "person", "food", "object", "building",
+    "vehicle", "stuff", "something", "somewhere"
+}
+
+_GENERIC_WEAK_WORDS = {
+    "nice", "good", "bad", "common", "popular",
+    "simple", "interesting", "useful", "really", "very"
+}
+
+
+def _is_obviously_generic_text(text: str) -> bool:
+    text = (text or "").strip().lower()
+    if not text:
+        return True
+
+    normalized = re.sub(r"[^a-z0-9\s]", " ", text)
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    if not normalized:
+        return True
+
+    for pattern in _GENERIC_PHRASE_PATTERNS:
+        if re.match(pattern, normalized, flags=re.IGNORECASE):
+            return True
+
+    tokens = normalized.split()
+    content_tokens = [
+        t for t in tokens
+        if t not in {"it", "is", "a", "an", "the", "this", "that", "there", "are", "was", "were", "to", "of", "and", "in", "on", "for", "with", "you", "can", "find", "people", "use"}
+    ]
+
+    if not content_tokens:
+        return True
+
+    if len(content_tokens) == 1 and content_tokens[0] in _GENERIC_WEAK_WORDS:
+        return True
+
+    if len(content_tokens) <= 2 and all(t in _GENERIC_BROAD_TERMS for t in content_tokens):
+        return True
+
+    return False
+
 def ai_based_referee_check(
     description: str,
     secret_word: str,
@@ -212,6 +271,27 @@ def ai_based_referee_check(
             cached = _REFEREE_CACHE[cache_key]
             print("🧠 Cache hit:", "PASS" if cached[0] else "FAIL", f"({len(cached[1])} violations)")
             return cached
+
+    # Hard gates: reject obviously generic content deterministically
+    if _is_obviously_generic_text(description_clean):
+        final = (False, [{
+            "code": "MEANINGLESS",
+            "message": f'Description is too generic or vague: "{description_clean}". Add at least one concrete detail.',
+            "severity": "high"
+        }])
+        with _REFEREE_CACHE_LOCK:
+            _REFEREE_CACHE[cache_key] = final
+        return final
+
+    if hint_clean and _is_obviously_generic_text(hint_clean):
+        final = (False, [{
+            "code": "MEANINGLESS",
+            "message": f'Hint is too generic or vague: "{hint_clean}". Add at least one new concrete detail.',
+            "severity": "high"
+        }])
+        with _REFEREE_CACHE_LOCK:
+            _REFEREE_CACHE[cache_key] = final
+        return final
 
     # Hard gate: reject redundant hints deterministically
     if hint_clean and _is_redundant_hint(description_clean, hint_clean):

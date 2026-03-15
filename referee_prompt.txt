@@ -51,9 +51,13 @@ Check ALL of the following. Return a violation for the FIRST (most serious) rule
 4. TOXIC — The description contains offensive, inappropriate, sexual, or harmful content.
 
 5. MEANINGLESS — The description is too vague, generic, or nonsensical to be a valid clue. It must contain at least one concrete, specific detail about the secret word.
-   - Examples of MEANINGLESS: "It is a thing", "It is nice", "It is a", "It has stuff", "It is really good with nice things", "It is a really nice ground with good stuff"
-   - A description is MEANINGLESS if someone reading it could not even narrow down what kind of thing the secret word is.
-   - Short but specific descriptions are fine (e.g., "It is a large body of salt water" is valid).
+   - Examples of MEANINGLESS: "It is a thing", "It is a place", "It is an animal", "It is food", "It is nice", "It is a", "It has stuff", "It is really good with nice things", "It is a really nice ground with good stuff"
+   - A description is MEANINGLESS if someone reading it could not narrow the answer down beyond an extremely broad category.
+   - Extremely broad category-only clues are MEANINGLESS, including clues that only say something is a thing, place, animal, food, object, person, building, vehicle, or similar broad type.
+   - Generic templates like "it is a place", "it is a thing", "you can find it somewhere", "people use it", "it exists in the world", "it is something", or "it is used for many things" are MEANINGLESS unless they also include a concrete distinguishing detail.
+   - Adjectives like nice, good, bad, common, popular, simple, interesting, or useful do NOT count as concrete details by themselves.
+   - Do NOT reject a clue just because it is short. If it includes one real distinguishing fact, it is valid.
+   - Short but specific descriptions are fine (e.g., "It is a large body of salt water" or "It lives in the ocean" are valid).
 
 6. INCORRECT — The description contains a factually wrong statement about the secret word. This means something that is objectively false about the word, not just vague or generic.
    - Example: secret word = "sea", description = "It is a large area of land" → INCORRECT (sea is water, not land)
@@ -70,6 +74,8 @@ Apply the same rules above to the HINT, PLUS:
 - REDUNDANT: The hint adds no new concrete information beyond the description. Rephrasing the same idea does NOT count as new information.
   - Example: Description "It lives in water", Hint "It is found in the water" → REDUNDANT
   - Example: Description "It lives in water", Hint "It has a blowhole on top of its head" → OK (new detail)
+- Be STRICT about clearly generic hints too. Hints like "it is a thing", "it is a place", "people use it", "you can find it somewhere", or other broad category-only clues are MEANINGLESS unless they add a concrete distinguishing detail.
+- Do NOT reject a hint just because it is short. Reject it only if it is generic on its own or adds no concrete new detail.
 - Spelling hints ARE allowed in the hint (do NOT flag SPELLING_HINTS for hints).
 - One forbidden word is allowed in the hint (do NOT flag FORBIDDEN_WORD_USED for the first one).
 
@@ -77,12 +83,13 @@ Apply the same rules above to the HINT, PLUS:
 IMPORTANT GUIDELINES
 ═══════════════════════════════════════════════════════
 - Be LENIENT about WORD_LEAK: only flag it for the secret word itself, single-word synonyms, or very short synonym phrases. NEVER flag a full descriptive sentence as WORD_LEAK, even if it makes the answer obvious.
-- Be STRICT about MEANINGLESS: reject descriptions with no real, specific content.
+- Be STRICT about MEANINGLESS only for clearly generic descriptions or hints with no real, specific content.
 - Be STRICT about INCORRECT: reject descriptions with clear factual errors about the secret word.
 - Be LENIENT about style, grammar, and minor imprecision.
 - Do NOT reject a description just because it is short, simple, or makes the word easy to guess.
-- The player already knows the CATEGORY, so mentioning the category name is allowed.
-- When in doubt, ALLOW the description. Only reject when you are certain a rule is broken.
+- The player already knows the CATEGORY, so mentioning the category name is allowed, but category-only clues are still too generic and should be rejected as MEANINGLESS.
+- When deciding between REDUNDANT and MEANINGLESS for a hint, use REDUNDANT if it repeats the description and MEANINGLESS if it is generic on its own.
+- When in doubt, ALLOW the description only if it still contains at least one concrete detail. Otherwise reject it as MEANINGLESS.
 
 ═══════════════════════════════════════════════════════
 RESPONSE FORMAT

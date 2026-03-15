@@ -366,6 +366,7 @@ def ask_llm_to_guess():
     forbidden_words = data.get("forbidden_words", [])
     round_id = data.get("round_id")
     duration_ms = data.get("duration_ms")
+    ai_thinking_ms = data.get("ai_thinking_ms")
     description_approved = data.get("description_approved", False)
 
     if not round_id:
@@ -450,6 +451,7 @@ def ask_llm_to_guess():
             print("✅ Hint passed validation.")
 
     # ── Ask AI to guess with confidence score ──
+    ai_guess_started_at = time.perf_counter()
     prompt = f"""You are playing a word guessing game. Based on this description, guess the secret word.
 
 DESCRIPTION: {user_description}
@@ -490,11 +492,13 @@ Return ONLY this JSON (no extra text):
     print(f"⏳ AI thinking delay: {think_seconds:.1f}s (confidence={confidence:.2f})")
     time.sleep(think_seconds)
 
+    ai_thinking_ms = int((time.perf_counter() - ai_guess_started_at) * 1000)
+
     # ── Log AI guess action ──
     ai_action_number = next_action_number(db, round_id)
     cursor = db.execute(
-        'INSERT OR REPLACE INTO Actions (round_id, action_number, actor, action_type, content) VALUES (?, ?, ?, ?, ?)',
-        (round_id, ai_action_number, 'ai', 'guess', guess)
+        'INSERT OR REPLACE INTO Actions (round_id, action_number, actor, action_type, content, duration_ms) VALUES (?, ?, ?, ?, ?, ?)',
+        (round_id, ai_action_number, 'ai', 'guess', guess, ai_thinking_ms)
     )
     ai_action_id = cursor.lastrowid
     db.commit()
@@ -1057,8 +1061,8 @@ def analytics_data():
             FROM Rounds r
             JOIN Actions a ON a.round_id = r.round_id
             WHERE r.game_mode = 'ai_guesses'
-              AND a.actor = 'user'
-              AND a.action_type = 'description'
+              AND a.actor = 'ai'
+              AND a.action_type = 'guess'
               AND a.duration_ms IS NOT NULL
             GROUP BY r.round_id
         )
@@ -1072,8 +1076,8 @@ def analytics_data():
             FROM Rounds r
             JOIN Actions a ON a.round_id = r.round_id
             WHERE r.game_mode = 'ai_guesses'
-              AND a.actor = 'user'
-              AND a.action_type = 'description'
+              AND a.actor = 'ai'
+              AND a.action_type = 'guess'
               AND a.duration_ms IS NOT NULL
             GROUP BY r.round_id
         )

@@ -153,7 +153,8 @@ export class GameService {
     difficulty: string,
     forbiddenWords: string[],
     durationMs?: number,
-    descriptionApproved: boolean = false
+    descriptionApproved: boolean = false,
+    aiThinkingMs?: number
   ): Observable<GuessResponse> {
     const roundId = this.getCurrentRoundId();
     return this.http.post<GuessResponse>(`${this.apiUrl}/guess`, {
@@ -165,6 +166,7 @@ export class GameService {
       forbidden_words: forbiddenWords,
       duration_ms: durationMs,
       description_approved: descriptionApproved,
+      ai_thinking_ms: aiThinkingMs,
     });
   }
 

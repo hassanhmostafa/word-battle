@@ -367,11 +367,28 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
     // Phase 1 (new description): validate first, then start timer + guess
     // Phase 2 (hint/re-guess):   skip validation, timer already running
+    const runGuess = () => {
+      const guessStartTime = Date.now();
+      return this.gameService.makeGuess(
+        input,
+        this.correctWord,
+        this.currentCategory,
+        this.currentDifficulty,
+        this.forbiddenWords,
+        durationMs,
+        true,
+        undefined
+      ).pipe(
+        map(r => ({
+          type: 'guess' as const,
+          response: r,
+          elapsedMs: Date.now() - guessStartTime,
+        }))
+      );
+    };
+
     const validateCall = this.descriptionApproved
-      ? this.gameService.makeGuess(
-          input, this.correctWord, this.currentCategory, this.currentDifficulty,
-          this.forbiddenWords, durationMs, true
-        ).pipe(map(r => ({ type: 'guess' as const, response: r })))
+      ? runGuess()
       : this.gameService.validateDescription(
           input, this.correctWord, this.currentCategory, this.currentDifficulty,
           this.forbiddenWords, durationMs
@@ -382,14 +399,9 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
             this.descriptionApproved = true;
             this.localUncompliantCount = 0;
             this.startAiTimer();
-            return this.gameService.makeGuess(
-              input, this.correctWord, this.currentCategory, this.currentDifficulty,
-              this.forbiddenWords, durationMs, true
-            ).pipe(map(r => ({ type: 'guess' as const, response: r })));
+            return runGuess();
           })
         );
-
-    const guessStartTime = Date.now();
 
     validateCall.subscribe({
         next: (wrapped) => {
@@ -401,7 +413,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
             this.timerChanged.emit({ aiGuessTimeDiff: -2 });
           }
 
-          // unwrap: hint path returns GuessResponse directly, description path wraps it
+          // unwrap the timed guess response
           const response = (wrapped as any)?.response ?? wrapped as any;
 
           const guessText = (response?.guess ?? "").trim();
@@ -412,7 +424,7 @@ export class AiGuessesComponent implements OnInit, OnDestroy, OnChanges {
           this.isAiGuessCorrect = backendCorrect || localExact;
           this.aiGuessChecked = true;
 
-          const elapsedMs = Date.now() - guessStartTime;
+          const elapsedMs = (wrapped as any)?.elapsedMs ?? 0;
 
           if (this.isAiGuessCorrect) {
             // ── Percentage-based bonus for AI correct guess ──

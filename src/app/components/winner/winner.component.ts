@@ -47,10 +47,11 @@ export class WinnerComponent implements OnInit {
       else this.resolvedWinner = "tie";
     }
 
-    // Play appropriate sound
+    // Play appropriate sound only on the dedicated winner page.
+    // AI timeout wins are handled on the game-over page instead.
     if (this.resolvedWinner === "user") {
       this.soundService.playWin();
-    } else {
+    } else if (this.resolvedWinner === "ai") {
       this.soundService.playGameOver();
     }
 

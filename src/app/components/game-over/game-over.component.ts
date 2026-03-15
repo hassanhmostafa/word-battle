@@ -12,6 +12,7 @@ import { LoggingService } from "../../services/logging.service";
 export class GameOverComponent implements OnInit {
   reason: string | null = null;
   roundNumber: number | null = null;
+  resolvedWinner: "user" | "ai" | "tie" = "tie";
 
   constructor(
     private route: ActivatedRoute,
@@ -55,6 +56,7 @@ export class GameOverComponent implements OnInit {
         winner = "tie";
       }
     }
+    this.resolvedWinner = winner;
 
     // ✅ FIX: Call endGame (not endRound) so the Games table is updated
     // with outcome, winner, user_final_time, ai_final_time
@@ -94,6 +96,14 @@ export class GameOverComponent implements OnInit {
       default:
         return "Game Over";
     }
+  }
+
+  get isUserTimeoutLoss(): boolean {
+    return this.reason === "user-timeout";
+  }
+
+  get isAiTimeoutWin(): boolean {
+    return this.reason === "ai-timeout";
   }
 
   startGame() {

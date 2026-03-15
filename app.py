@@ -539,7 +539,7 @@ CATEGORY: {category}
 FORBIDDEN WORDS: {forbidden_str}
 
 Rules:
-1. Start with: "I have a word in my mind. Let me explain it to you!"
+1. Start directly with the description itself. Do not add any intro sentence or preamble.
 2. Write 3-4 simple sentences (~50 words total)
 3. DO NOT use the word "{secret_word}" or any part of it
 4. DO NOT use direct synonyms

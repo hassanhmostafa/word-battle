@@ -31,7 +31,18 @@ CORS(app)
 # DATABASE SETUP
 # ============================================================================
 
-DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'word_battle.db')
+DEFAULT_DATABASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'word_battle.db')
+DATABASE = os.getenv("DATABASE_PATH", DEFAULT_DATABASE_PATH)
+
+
+def ensure_database_ready():
+    os.makedirs(os.path.dirname(DATABASE), exist_ok=True)
+    with sqlite3.connect(DATABASE) as db:
+        db.row_factory = sqlite3.Row
+        with app.open_resource('schema.sql', mode='r') as f:
+            db.cursor().executescript(f.read())
+        db.commit()
+
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -48,10 +59,7 @@ def close_connection(exception):
 
 def init_db():
     with app.app_context():
-        db = get_db()
-        with app.open_resource('schema.sql', mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
+        ensure_database_ready()
 
 @app.cli.command('init-db')
 def init_db_command():
@@ -406,11 +414,23 @@ def ask_llm_to_guess():
     else:
         # Description already approved — only validate the HINT part if present
         print("🕵️‍♂️ Description previously approved. Checking for hint...")
-        from utils import _split_desc_hint
+        from utils import _split_desc_hint, _is_obviously_generic_text
         desc_part, hint_part = _split_desc_hint(user_description)
         if hint_part:
             print(f"💡 Hint found: {hint_part}. Validating hint...")
-            # 1) WORD_LEAK check on the hint (secret word / morphological variants)
+            # 1) Reject clearly generic hints deterministically
+            if _is_obviously_generic_text(hint_part):
+                violations = [{
+                    "code": "MEANINGLESS",
+                    "message": f'Hint is too generic or vague: "{hint_part}". Add at least one new concrete detail.',
+                    "severity": "high"
+                }]
+                print(f"❌ Hint is generic: {violations}")
+                return jsonify({
+                    "error": "Your hint violates the rules.",
+                    "violations": violations
+                }), 400
+            # 2) WORD_LEAK check on the hint (secret word / morphological variants)
             hint_ok, hint_violations = rule_based_referee_check(hint_part, secret_word)
             if not hint_ok:
                 print(f"❌ Hint contains word leak: {hint_violations}")
@@ -418,7 +438,7 @@ def ask_llm_to_guess():
                     "error": "Your hint violates the rules.",
                     "violations": hint_violations
                 }), 400
-            # 2) Forbidden words check (allow 1)
+            # 3) Forbidden words check (allow 1)
             if forbidden_words:
                 violated, found = check_forbidden_words(hint_part, forbidden_words, max_words=1)
                 if violated:
@@ -1196,5 +1216,6 @@ def analytics_data():
 
 
 if __name__ == "__main__":
+    ensure_database_ready()
     port = int(os.environ.get("PORT", 5001))
     app.run(host="0.0.0.0", port=port, debug=False)

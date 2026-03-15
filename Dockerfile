@@ -10,7 +10,6 @@ COPY utils.py .
 COPY all_words.json .
 COPY referee_prompt.txt .
 COPY schema.sql .
-COPY word_battle.db .
 COPY templates/ ./templates/
 
 # Install dependencies

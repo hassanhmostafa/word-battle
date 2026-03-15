@@ -224,7 +224,6 @@
             <th>Started</th>
             <th>Winner</th>
             <th>Outcome</th>
-            <th>Rounds</th>
             <th>User Time Left</th>
             <th>AI Time Left</th>
           </tr>
@@ -368,11 +367,10 @@
             <td>${g.started_at ? g.started_at.slice(0, 16) : '—'}</td>
             <td>${badge(g.winner, winnerMap)}</td>
             <td>${badge(g.outcome, outcomeMap)}</td>
-            <td>${g.total_rounds}</td>
             <td>${g.user_time_left ?? '—'}s</td>
             <td>${g.ai_time_left ?? '—'}s</td>
           </tr>
-        `).join('') || '<tr><td colspan="8" style="color:#64748b">No games yet</td></tr>';
+        `).join('') || '<tr><td colspan="7" style="color:#64748b">No games yet</td></tr>';
 
         document.getElementById('loading').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';

@@ -1301,6 +1301,29 @@ def debug_broken_completed_games():
     ''').fetchall()
     return jsonify([dict(r) for r in rows])
 
+@app.get('/debug/fix-game-35')
+def debug_fix_game_35():
+    db = get_db()
+    db.execute('''
+        UPDATE Games
+        SET winner = ?,
+            user_final_time = ?,
+            ai_final_time = ?,
+            outcome = ?
+        WHERE game_id = ?
+          AND username_at_game_time = ?
+    ''', ('user', 135, 0, 'completed', 35, 'Amroy Khattab'))
+    db.commit()
+
+    row = db.execute('''
+        SELECT game_id, username_at_game_time, outcome, winner,
+               user_final_time, ai_final_time, ended_at
+        FROM Games
+        WHERE game_id = ?
+    ''', (35,)).fetchone()
+
+    return jsonify(dict(row) if row else {'error': 'Game not found'})
+
 if __name__ == "__main__":
     ensure_database_ready()
     port = int(os.environ.get("PORT", 5001))

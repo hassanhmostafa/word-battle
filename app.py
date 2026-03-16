@@ -1133,7 +1133,12 @@ def analytics_data():
     """).fetchall()
 
     difficulty_dist = db.execute("""
-        SELECT difficulty, COUNT(*) as cnt FROM Rounds GROUP BY difficulty ORDER BY cnt DESC
+        SELECT r.difficulty, COUNT(*) as cnt
+        FROM Rounds r
+        JOIN Games g ON g.game_id = r.game_id
+        WHERE g.winner IS NOT NULL
+        GROUP BY r.difficulty
+        ORDER BY cnt DESC
     """).fetchall()
 
     category_perf = db.execute("""

@@ -1286,6 +1286,20 @@ def debug_latest_games():
         LIMIT 20
     ''').fetchall()
     return jsonify([dict(r) for r in rows])
+    
+@app.get('/debug/broken-completed-games')
+def debug_broken_completed_games():
+    db = get_db()
+    rows = db.execute('''
+        SELECT game_id, username_at_game_time, started_at, ended_at,
+               outcome, winner, user_final_time, ai_final_time
+        FROM Games
+        WHERE outcome = 'completed'
+          AND (winner IS NULL OR user_final_time IS NULL OR ai_final_time IS NULL)
+        ORDER BY game_id DESC
+        LIMIT 20
+    ''').fetchall()
+    return jsonify([dict(r) for r in rows])
 
 if __name__ == "__main__":
     ensure_database_ready()

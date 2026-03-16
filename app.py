@@ -1128,7 +1128,7 @@ def analytics_data():
                SUM(CASE WHEN g.winner = 'ai' THEN 1 ELSE 0 END) as ai_wins,
                ROUND(AVG((julianday(g.ended_at) - julianday(g.started_at)) * 1440), 1) as avg_game_min
         FROM Users u JOIN Games g ON g.user_id = u.user_id
-        WHERE g.ended_at IS NOT NULL
+        WHERE g.winner IS NOT NULL
         GROUP BY u.user_id ORDER BY games_played DESC
     """).fetchall()
 

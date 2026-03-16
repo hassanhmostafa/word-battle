@@ -138,17 +138,15 @@
       gap: 4px;
 
       &.timer-row--sticky-mobile {
-        position: fixed;
-        top: max(0.35rem, env(safe-area-inset-top));
-        left: 0.5rem;
-        right: 0.5rem;
-        z-index: 999;
+        position: relative;
+        z-index: 1;
         padding: 0.45rem 0.6rem;
         border-radius: 12px;
         background: rgba(15, 23, 42, 0.97);
         border: 1px solid rgba(0, 255, 204, 0.22);
         box-shadow: 0 8px 18px rgba(2, 6, 23, 0.38);
         backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
       }
     }
 

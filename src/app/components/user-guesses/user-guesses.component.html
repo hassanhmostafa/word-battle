@@ -6,19 +6,21 @@
   ></app-category>
 
   <ng-container *ngIf="currentCategory !== ''">
-    <app-game-header
-      [username]="username"
-      [round]="roundNumber"
-      [difficulty]="currentDifficulty"
-      [correctAnswers]="gameService.userStats.correct"
-      [wrongAnswers]="gameService.userStats.wrong"
-      [userTimeLeft]="userGuessTimeLeft"
-      [aiTimeLeft]="aiGuessTimeLeft"
-      [currentCategory]="currentCategory"
-      [aiStats]="gameService.aiStats"
-      [userStats]="gameService.userStats"
-      [wrongGuesses]="localWrongGuesses"
-    ></app-game-header>
+    <div class="mobile-header-shell">
+      <app-game-header
+        [username]="username"
+        [round]="roundNumber"
+        [difficulty]="currentDifficulty"
+        [correctAnswers]="gameService.userStats.correct"
+        [wrongAnswers]="gameService.userStats.wrong"
+        [userTimeLeft]="userGuessTimeLeft"
+        [aiTimeLeft]="aiGuessTimeLeft"
+        [currentCategory]="currentCategory"
+        [aiStats]="gameService.aiStats"
+        [userStats]="gameService.userStats"
+        [wrongGuesses]="localWrongGuesses"
+      ></app-game-header>
+    </div>
 
     <div class="commentary-slot">
       <div *ngIf="commentaryMessage; else userThinkingState" class="commentary-bubble" [ngClass]="commentaryType">

@@ -111,6 +111,11 @@
     i {
       color: #00ccff;
     }
+
+    &--compact {
+      font-size: 0.92rem;
+      margin: 0 0 0.45rem;
+    }
   }
 
   // ── Mobile responsiveness ──────────────────────────────────────────────────
@@ -167,6 +172,11 @@
 
     .bomb-label {
       font-size: 9px;
+    }
+
+    .game-round--compact {
+      font-size: 0.82rem;
+      margin-bottom: 0.35rem;
     }
   }
   // ────────────────────────────────────────────────────────────────────────────

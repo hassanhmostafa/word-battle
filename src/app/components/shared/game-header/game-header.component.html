@@ -102,6 +102,10 @@
   </div>
 
   <!-- ── TIMER ROW — below dark box, inside outer card ── -->
+  <p class="game-round game-round--compact">
+    <i class="fa-solid fa-repeat"></i> Round: {{ displayRound }} / 6
+  </p>
+
   <div class="timer-row" [class.timer-row--sticky-mobile]="!isAiGuessMode">
     <!-- User timer (teal) -->
     <div class="timer-ring-wrapper">
@@ -141,7 +145,4 @@
     </div>
   </div>
 
-  <p class="game-round">
-    <i class="fa-solid fa-repeat"></i> Round: {{ displayRound }} / 6
-  </p>
 </div>

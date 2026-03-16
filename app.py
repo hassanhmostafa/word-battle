@@ -1013,7 +1013,7 @@ def analytics_data():
         return jsonify({'error': 'Unauthorized'}), 401
     db = get_db()
 
-    total_games = db.execute("SELECT COUNT(*) FROM Games WHERE ended_at IS NOT NULL").fetchone()[0]
+    total_games = db.execute("SELECT COUNT(*) FROM Games WHERE winner IS NOT NULL").fetchone()[0]
     user_wins   = db.execute("SELECT COUNT(*) FROM Games WHERE winner = 'user'").fetchone()[0]
     ai_wins     = db.execute("SELECT COUNT(*) FROM Games WHERE winner = 'ai'").fetchone()[0]
     ties        = db.execute("SELECT COUNT(*) FROM Games WHERE winner = 'tie'").fetchone()[0]
@@ -1146,7 +1146,7 @@ def analytics_data():
     recent_games = db.execute("""
         SELECT g.game_id, g.username_at_game_time, g.started_at, g.ended_at,
                g.winner, g.outcome, g.total_rounds, g.user_final_time, g.ai_final_time
-        FROM Games g WHERE g.ended_at IS NOT NULL
+        FROM Games g WHERE g.winner IS NOT NULL
         ORDER BY g.game_id DESC LIMIT 15
     """).fetchall()
 

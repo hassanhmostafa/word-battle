@@ -390,6 +390,15 @@ textarea.ai-override {
     border-radius: 8px;
   }
 
+  .mobile-header-shell {
+    position: sticky;
+    top: max(0.35rem, env(safe-area-inset-top));
+    z-index: 2100;
+    margin: -0.25rem -0.25rem 0.75rem;
+    padding: 0 0.25rem;
+    background: #1e293b;
+  }
+
   .commentary-slot {
     min-height: 88px;
   }

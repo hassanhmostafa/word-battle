@@ -1,153 +1,150 @@
 <div class="game-header">
-  <h2>
-    <i class="fa-solid fa-robot"></i>
-    WORD BATTLE
-    <i class="fa-solid fa-puzzle-piece"></i>
-  </h2>
+  <div class="game-header__intro">
+    <h2>
+      <i class="fa-solid fa-robot"></i>
+      WORD BATTLE
+      <i class="fa-solid fa-puzzle-piece"></i>
+    </h2>
 
-  <p>
-    <strong>Difficulty:</strong> {{ difficulty }} | <strong>Category:</strong>
-    {{ currentCategory }}
-  </p>
-
-  <div class="game-tracker">
-
-    <!-- ── USER SIDE ── -->
-    <div class="game-tracker__user">
-      <strong><i class="fa-solid fa-user"></i> {{ username }}</strong><br />
-      <i class="fa-solid fa-check"></i> Correct: {{ userStats.correct }}<br />
-      <i class="fa-solid fa-xmark"></i> Wrong: {{ userStats.wrong }}<br />
-    </div>
-
-    <!-- ── BOMB (centre column) ── -->
-    <div class="game-tracker__bomb">
-
-      <!-- USER's bomb (red) — shown when the user is guessing -->
-      <ng-container *ngIf="!isAiGuessMode">
-        <svg class="bomb-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-          <!-- Fuse -->
-          <path *ngIf="wrongGuesses < 1"
-            d="M50 10 Q58 18 50 26 Q42 34 50 42"
-            fill="none" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
-          <path *ngIf="wrongGuesses >= 1"
-            d="M50 10 Q58 18 50 26 Q42 34 50 42"
-            fill="none" stroke="#e74c3c" stroke-width="3" stroke-linecap="round"/>
-          <circle *ngIf="wrongGuesses >= 1" cx="50" cy="9" r="4" fill="#f39c12"/>
-          <!-- Body -->
-          <circle *ngIf="wrongGuesses < 2"
-            cx="50" cy="80" r="30" fill="none" stroke="#444" stroke-width="3" stroke-dasharray="4 3"/>
-          <circle *ngIf="wrongGuesses >= 2"
-            cx="50" cy="80" r="30" fill="#2c3e50" stroke="#e74c3c" stroke-width="3"/>
-          <circle *ngIf="wrongGuesses >= 2" cx="38" cy="68" r="6" fill="white" opacity="0.15"/>
-          <!-- Explosion X -->
-          <line *ngIf="wrongGuesses < 3"
-            x1="28" y1="58" x2="72" y2="102" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
-          <line *ngIf="wrongGuesses < 3"
-            x1="72" y1="58" x2="28" y2="102" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
-          <line *ngIf="wrongGuesses >= 3"
-            x1="22" y1="54" x2="78" y2="106" stroke="#f39c12" stroke-width="5" stroke-linecap="round"/>
-          <line *ngIf="wrongGuesses >= 3"
-            x1="78" y1="54" x2="22" y2="106" stroke="#f39c12" stroke-width="5" stroke-linecap="round"/>
-          <circle *ngIf="wrongGuesses >= 3" cx="50" cy="80" r="34" fill="none" stroke="#e74c3c" stroke-width="2" opacity="0.5"/>
-          <circle *ngIf="wrongGuesses >= 3" cx="50" cy="80" r="40" fill="none" stroke="#f39c12" stroke-width="1.5" opacity="0.3"/>
-        </svg>
-        <div class="bomb-label">
-          <span *ngIf="wrongGuesses === 0">Your lives: 3</span>
-          <span *ngIf="wrongGuesses === 1" style="color:#e67e22">Your lives: 2</span>
-          <span *ngIf="wrongGuesses === 2" style="color:#e74c3c">Your lives: 1!</span>
-          <span *ngIf="wrongGuesses >= 3" style="color:#c0392b; font-weight:700">💥 Out!</span>
-        </div>
-      </ng-container>
-
-      <!-- AI's bomb (blue) — shown when the AI is guessing -->
-      <ng-container *ngIf="isAiGuessMode">
-        <svg class="bomb-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-          <!-- Fuse -->
-          <path *ngIf="wrongGuesses < 1"
-            d="M50 10 Q58 18 50 26 Q42 34 50 42"
-            fill="none" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
-          <path *ngIf="wrongGuesses >= 1"
-            d="M50 10 Q58 18 50 26 Q42 34 50 42"
-            fill="none" stroke="#3498db" stroke-width="3" stroke-linecap="round"/>
-          <circle *ngIf="wrongGuesses >= 1" cx="50" cy="9" r="4" fill="#5dade2"/>
-          <!-- Body -->
-          <circle *ngIf="wrongGuesses < 2"
-            cx="50" cy="80" r="30" fill="none" stroke="#444" stroke-width="3" stroke-dasharray="4 3"/>
-          <circle *ngIf="wrongGuesses >= 2"
-            cx="50" cy="80" r="30" fill="#1a252f" stroke="#3498db" stroke-width="3"/>
-          <circle *ngIf="wrongGuesses >= 2" cx="38" cy="68" r="6" fill="white" opacity="0.15"/>
-          <!-- Explosion X -->
-          <line *ngIf="wrongGuesses < 3"
-            x1="28" y1="58" x2="72" y2="102" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
-          <line *ngIf="wrongGuesses < 3"
-            x1="72" y1="58" x2="28" y2="102" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
-          <line *ngIf="wrongGuesses >= 3"
-            x1="22" y1="54" x2="78" y2="106" stroke="#5dade2" stroke-width="5" stroke-linecap="round"/>
-          <line *ngIf="wrongGuesses >= 3"
-            x1="78" y1="54" x2="22" y2="106" stroke="#5dade2" stroke-width="5" stroke-linecap="round"/>
-          <circle *ngIf="wrongGuesses >= 3" cx="50" cy="80" r="34" fill="none" stroke="#3498db" stroke-width="2" opacity="0.5"/>
-          <circle *ngIf="wrongGuesses >= 3" cx="50" cy="80" r="40" fill="none" stroke="#5dade2" stroke-width="1.5" opacity="0.3"/>
-        </svg>
-        <div class="bomb-label">
-          <span *ngIf="wrongGuesses === 0">AI lives: 3</span>
-          <span *ngIf="wrongGuesses === 1" style="color:#2980b9">AI lives: 2</span>
-          <span *ngIf="wrongGuesses === 2" style="color:#1a6fa8">AI lives: 1!</span>
-          <span *ngIf="wrongGuesses >= 3" style="color:#1a5276; font-weight:700">💥 Out!</span>
-        </div>
-      </ng-container>
-
-    </div>
-
-    <!-- ── AI SIDE ── -->
-    <div class="game-tracker__ai">
-      <strong>AI </strong> <i class="fa-solid fa-robot"></i><br />
-      Correct: {{ aiStats.correct }} <i class="fa-solid fa-check"></i><br />
-      Wrong: {{ aiStats.wrong }} <i class="fa-solid fa-xmark"></i><br />
-    </div>
-
+    <p>
+      <strong>Difficulty:</strong> {{ difficulty }} | <strong>Category:</strong>
+      {{ currentCategory }}
+    </p>
   </div>
 
-  <!-- ── TIMER ROW — below dark box, inside outer card ── -->
-  <div class="timer-row" [class.timer-row--sticky-mobile]="!isAiGuessMode">
-    <!-- User timer (teal) -->
-    <div class="timer-ring-wrapper">
-      <svg class="timer-ring" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="34" fill="none" stroke="#1e3a5f" stroke-width="7"/>
-        <circle cx="40" cy="40" r="34"
-          fill="none"
-          [attr.stroke]="userTimeLeft <= 10 ? '#e74c3c' : (userTimeLeft <= 30 ? '#f39c12' : '#00ffcc')"
-          stroke-width="7" stroke-linecap="round" stroke-dasharray="213.6"
-          [style.stroke-dashoffset]="getUserArcOffset()" transform="rotate(-90 40 40)"
-        />
-        <text x="40" y="45" text-anchor="middle" font-size="16" font-weight="bold"
-          font-family="Orbitron, sans-serif"
-          [attr.fill]="userTimeLeft <= 10 ? '#e74c3c' : (userTimeLeft <= 30 ? '#f39c12' : '#00ffcc')"
-        >{{ userTimeLeft }}</text>
-      </svg>
-    </div>
-    <!-- Centre turn label -->
-    <div class="game-user-round">
-      {{ isAiGuessMode ? 'Your Turn to Describe!' : 'Your Turn to Guess!' }}
-    </div>
-    <!-- AI timer (blue) -->
-    <div class="timer-ring-wrapper">
-      <svg class="timer-ring" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="34" fill="none" stroke="#1e3a5f" stroke-width="7"/>
-        <circle cx="40" cy="40" r="34"
-          fill="none"
-          [attr.stroke]="aiTimeLeft <= 10 ? '#e74c3c' : (aiTimeLeft <= 30 ? '#f39c12' : '#3498db')"
-          stroke-width="7" stroke-linecap="round" stroke-dasharray="213.6"
-          [style.stroke-dashoffset]="getAiArcOffset()" transform="rotate(-90 40 40)"
-        />
-        <text x="40" y="45" text-anchor="middle" font-size="16" font-weight="bold"
-          font-family="Orbitron, sans-serif"
-          [attr.fill]="aiTimeLeft <= 10 ? '#e74c3c' : (aiTimeLeft <= 30 ? '#f39c12' : '#3498db')"
-        >{{ aiTimeLeft }}</text>
-      </svg>
+  <div class="game-header__status-shell">
+    <div class="game-header__status">
+      <div class="game-tracker">
+
+        <!-- ── USER SIDE ── -->
+        <div class="game-tracker__user">
+          <strong><i class="fa-solid fa-user"></i> {{ username }}</strong><br />
+          <i class="fa-solid fa-check"></i> Correct: {{ userStats.correct }}<br />
+          <i class="fa-solid fa-xmark"></i> Wrong: {{ userStats.wrong }}<br />
+        </div>
+
+        <!-- ── BOMB (centre column) ── -->
+        <div class="game-tracker__bomb">
+
+          <!-- USER's bomb (red) — shown when the user is guessing -->
+          <ng-container *ngIf="!isAiGuessMode">
+            <svg class="bomb-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+              <path *ngIf="wrongGuesses < 1"
+                d="M50 10 Q58 18 50 26 Q42 34 50 42"
+                fill="none" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
+              <path *ngIf="wrongGuesses >= 1"
+                d="M50 10 Q58 18 50 26 Q42 34 50 42"
+                fill="none" stroke="#e74c3c" stroke-width="3" stroke-linecap="round"/>
+              <circle *ngIf="wrongGuesses >= 1" cx="50" cy="9" r="4" fill="#f39c12"/>
+              <circle *ngIf="wrongGuesses < 2"
+                cx="50" cy="80" r="30" fill="none" stroke="#444" stroke-width="3" stroke-dasharray="4 3"/>
+              <circle *ngIf="wrongGuesses >= 2"
+                cx="50" cy="80" r="30" fill="#2c3e50" stroke="#e74c3c" stroke-width="3"/>
+              <circle *ngIf="wrongGuesses >= 2" cx="38" cy="68" r="6" fill="white" opacity="0.15"/>
+              <line *ngIf="wrongGuesses < 3"
+                x1="28" y1="58" x2="72" y2="102" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
+              <line *ngIf="wrongGuesses < 3"
+                x1="72" y1="58" x2="28" y2="102" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
+              <line *ngIf="wrongGuesses >= 3"
+                x1="22" y1="54" x2="78" y2="106" stroke="#f39c12" stroke-width="5" stroke-linecap="round"/>
+              <line *ngIf="wrongGuesses >= 3"
+                x1="78" y1="54" x2="22" y2="106" stroke="#f39c12" stroke-width="5" stroke-linecap="round"/>
+              <circle *ngIf="wrongGuesses >= 3" cx="50" cy="80" r="34" fill="none" stroke="#e74c3c" stroke-width="2" opacity="0.5"/>
+              <circle *ngIf="wrongGuesses >= 3" cx="50" cy="80" r="40" fill="none" stroke="#f39c12" stroke-width="1.5" opacity="0.3"/>
+            </svg>
+            <div class="bomb-label">
+              <span *ngIf="wrongGuesses === 0">Your lives: 3</span>
+              <span *ngIf="wrongGuesses === 1" style="color:#e67e22">Your lives: 2</span>
+              <span *ngIf="wrongGuesses === 2" style="color:#e74c3c">Your lives: 1!</span>
+              <span *ngIf="wrongGuesses >= 3" style="color:#c0392b; font-weight:700">💥 Out!</span>
+            </div>
+          </ng-container>
+
+          <!-- AI's bomb (blue) — shown when the AI is guessing -->
+          <ng-container *ngIf="isAiGuessMode">
+            <svg class="bomb-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+              <path *ngIf="wrongGuesses < 1"
+                d="M50 10 Q58 18 50 26 Q42 34 50 42"
+                fill="none" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
+              <path *ngIf="wrongGuesses >= 1"
+                d="M50 10 Q58 18 50 26 Q42 34 50 42"
+                fill="none" stroke="#3498db" stroke-width="3" stroke-linecap="round"/>
+              <circle *ngIf="wrongGuesses >= 1" cx="50" cy="9" r="4" fill="#5dade2"/>
+              <circle *ngIf="wrongGuesses < 2"
+                cx="50" cy="80" r="30" fill="none" stroke="#444" stroke-width="3" stroke-dasharray="4 3"/>
+              <circle *ngIf="wrongGuesses >= 2"
+                cx="50" cy="80" r="30" fill="#1a252f" stroke="#3498db" stroke-width="3"/>
+              <circle *ngIf="wrongGuesses >= 2" cx="38" cy="68" r="6" fill="white" opacity="0.15"/>
+              <line *ngIf="wrongGuesses < 3"
+                x1="28" y1="58" x2="72" y2="102" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
+              <line *ngIf="wrongGuesses < 3"
+                x1="72" y1="58" x2="28" y2="102" stroke="#444" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
+              <line *ngIf="wrongGuesses >= 3"
+                x1="22" y1="54" x2="78" y2="106" stroke="#5dade2" stroke-width="5" stroke-linecap="round"/>
+              <line *ngIf="wrongGuesses >= 3"
+                x1="78" y1="54" x2="22" y2="106" stroke="#5dade2" stroke-width="5" stroke-linecap="round"/>
+              <circle *ngIf="wrongGuesses >= 3" cx="50" cy="80" r="34" fill="none" stroke="#3498db" stroke-width="2" opacity="0.5"/>
+              <circle *ngIf="wrongGuesses >= 3" cx="50" cy="80" r="40" fill="none" stroke="#5dade2" stroke-width="1.5" opacity="0.3"/>
+            </svg>
+            <div class="bomb-label">
+              <span *ngIf="wrongGuesses === 0">AI lives: 3</span>
+              <span *ngIf="wrongGuesses === 1" style="color:#2980b9">AI lives: 2</span>
+              <span *ngIf="wrongGuesses === 2" style="color:#1a6fa8">AI lives: 1!</span>
+              <span *ngIf="wrongGuesses >= 3" style="color:#1a5276; font-weight:700">💥 Out!</span>
+            </div>
+          </ng-container>
+
+        </div>
+
+        <!-- ── AI SIDE ── -->
+        <div class="game-tracker__ai">
+          <strong>AI </strong> <i class="fa-solid fa-robot"></i><br />
+          Correct: {{ aiStats.correct }} <i class="fa-solid fa-check"></i><br />
+          Wrong: {{ aiStats.wrong }} <i class="fa-solid fa-xmark"></i><br />
+        </div>
+      </div>
+
+      <div class="timer-row" [class.timer-row--sticky-mobile]="!isAiGuessMode">
+        <div class="timer-ring-wrapper">
+          <svg class="timer-ring" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#1e3a5f" stroke-width="7"/>
+            <circle cx="40" cy="40" r="34"
+              fill="none"
+              [attr.stroke]="userTimeLeft <= 10 ? '#e74c3c' : (userTimeLeft <= 30 ? '#f39c12' : '#00ffcc')"
+              stroke-width="7" stroke-linecap="round" stroke-dasharray="213.6"
+              [style.stroke-dashoffset]="getUserArcOffset()" transform="rotate(-90 40 40)"
+            />
+            <text x="40" y="45" text-anchor="middle" font-size="16" font-weight="bold"
+              font-family="Orbitron, sans-serif"
+              [attr.fill]="userTimeLeft <= 10 ? '#e74c3c' : (userTimeLeft <= 30 ? '#f39c12' : '#00ffcc')"
+            >{{ userTimeLeft }}</text>
+          </svg>
+        </div>
+
+        <div class="game-user-round">
+          {{ isAiGuessMode ? 'Your Turn to Describe!' : 'Your Turn to Guess!' }}
+        </div>
+
+        <div class="timer-ring-wrapper">
+          <svg class="timer-ring" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#1e3a5f" stroke-width="7"/>
+            <circle cx="40" cy="40" r="34"
+              fill="none"
+              [attr.stroke]="aiTimeLeft <= 10 ? '#e74c3c' : (aiTimeLeft <= 30 ? '#f39c12' : '#3498db')"
+              stroke-width="7" stroke-linecap="round" stroke-dasharray="213.6"
+              [style.stroke-dashoffset]="getAiArcOffset()" transform="rotate(-90 40 40)"
+            />
+            <text x="40" y="45" text-anchor="middle" font-size="16" font-weight="bold"
+              font-family="Orbitron, sans-serif"
+              [attr.fill]="aiTimeLeft <= 10 ? '#e74c3c' : (aiTimeLeft <= 30 ? '#f39c12' : '#3498db')"
+            >{{ aiTimeLeft }}</text>
+          </svg>
+        </div>
+      </div>
+
+      <p class="game-round">
+        <i class="fa-solid fa-repeat"></i> Round: {{ displayRound }} / 6
+      </p>
     </div>
   </div>
-
-  <p class="game-round">
-    <i class="fa-solid fa-repeat"></i> Round: {{ displayRound }} / 6
-  </p>
 </div>

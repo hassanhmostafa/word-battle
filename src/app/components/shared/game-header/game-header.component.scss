@@ -2,25 +2,45 @@
   font-family: 'Orbitron', sans-serif;
   font-size: 1.05rem;
   font-weight: 600;
-  background-color: #1e293b;
   color: #f1f5f9;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 0 12px rgba(0, 255, 204, 0.2);
   text-align: center;
 
-  i {
-    color: #2d685f;
+  &__intro,
+  &__status {
+    background-color: #1e293b;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 255, 204, 0.2);
   }
 
-  h2 {
-    font-size: 2.2rem;
-    letter-spacing: 2px;
-    color: #00ffcc;
-    text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc;
+  &__intro {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+
+    i {
+      color: #2d685f;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      color: #00ffcc;
+      text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc;
+      margin: 0 0 1rem;
+    }
+
+    p {
+      margin: 0;
+    }
   }
 
-  // ── Dark score box (scores + bomb only) ──────────────────────────────────
+  &__status-shell {
+    position: relative;
+  }
+
+  &__status {
+    padding: 1.5rem;
+  }
+
   .game-tracker {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -30,7 +50,7 @@
     background-color: #0f172a;
     border-radius: 12px;
     padding: 1.25rem;
-    margin: 1.5rem 0 0.75rem 0;
+    margin: 0 0 0.75rem 0;
 
     i {
       color: #00ffcc;
@@ -50,14 +70,12 @@
       width: 140px;
     }
 
-    // AI side — same dark box, no special background
     &__ai {
       text-align: right;
       padding-left: 0.5rem;
     }
   }
 
-  // ── Timer row — below dark box, inside outer card ────────────────────────
   .timer-row {
     display: flex;
     align-items: center;
@@ -66,7 +84,6 @@
     margin-bottom: 0.5rem;
   }
 
-  // ── Circular countdown ring ──────────────────────────────────────────────
   .timer-ring-wrapper {
     display: flex;
     justify-content: center;
@@ -81,9 +98,7 @@
       transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
     }
   }
-  // ────────────────────────────────────────────────────────────────────────
 
-  // ── Bomb (centre column) ─────────────────────────────────────────────────
   .bomb-svg {
     width: 120px;
     height: 144px;
@@ -95,7 +110,6 @@
     color: #aaa;
     font-family: 'Orbitron', sans-serif;
   }
-  // ────────────────────────────────────────────────────────────────────────
 
   .game-user-round {
     flex: 1;
@@ -108,24 +122,41 @@
   }
 
   .game-round {
+    margin: 0;
+
     i {
       color: #00ccff;
     }
   }
 
-  // ── Mobile responsiveness ──────────────────────────────────────────────────
   @media (max-width: 600px) {
-    padding: 0.75rem;
+    &__intro {
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
 
-    h2 {
-      font-size: 1.3rem;
-      letter-spacing: 1px;
+      h2 {
+        font-size: 1.3rem;
+        letter-spacing: 1px;
+      }
+    }
+
+    &__status-shell {
+      position: sticky;
+      top: max(0.35rem, env(safe-area-inset-top));
+      z-index: 2100;
+      margin: -0.25rem -0.25rem 0.75rem;
+      padding: 0 0.25rem;
+      background: transparent;
+    }
+
+    &__status {
+      padding: 0.75rem;
     }
 
     .game-tracker {
       grid-template-columns: 1fr auto 1fr;
       padding: 0.5rem;
-      margin: 0.5rem 0 0.4rem 0;
+      margin: 0 0 0.4rem 0;
       gap: 4px;
       font-size: 0.75rem;
 
@@ -168,5 +199,4 @@
       font-size: 9px;
     }
   }
-  // ────────────────────────────────────────────────────────────────────────────
 }

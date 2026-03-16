@@ -95,7 +95,7 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
 
   // ── Commentary helpers ──
 
-  private showCommentary(msg: string, type: 'positive' | 'negative' | 'neutral' | 'warning', durationMs: number = 5000) {
+  private showCommentary(msg: string, type: 'positive' | 'negative' | 'neutral' | 'warning', durationMs: number = 8000) {
     this.commentaryMessage = msg;
     this.commentaryType = type;
     setTimeout(() => {
@@ -104,7 +104,7 @@ export class UserGuessesComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private showFeedbackCommentary(msg: string, type: 'positive' | 'negative' | 'neutral' | 'warning') {
-    this.showCommentary(msg, type, 6000);
+    this.showCommentary(msg, type, 9000);
   }
 
   // ── Timer: only USER's clock runs in this mode ──

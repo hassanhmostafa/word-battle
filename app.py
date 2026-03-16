@@ -178,17 +178,19 @@ CATEGORY: {category}
 FORBIDDEN WORDS: {', '.join(forbidden_words)}
 Rules:
 1. Start directly with the description itself. Do not add any intro sentence or preamble.
-2. Write 3-4 simple sentences (~50 words total)
-3. DO NOT use the word "{secret_word}" or any part of it
-4. DO NOT use direct synonyms
-5. Give helpful clues but don't make it too obvious
-6. Use simple vocabulary (B1 English level)
-7. Be informative and slightly playful
-8. Do not use the forbidden words (if any)
+2. Write a short description using 1-2 brief sentences only.
+3. Keep it concise, around 15-25 words total.
+4. Prefer fewer, more descriptive words instead of long sentences.
+5. DO NOT use the word "{secret_word}" or any part of it.
+6. DO NOT use direct synonyms.
+7. Give helpful clues but do not make it too obvious.
+8. Use simple vocabulary (B1 English level).
+9. Be informative and slightly playful.
+10. Do not use the forbidden words (if any).
 
 Generate the description now:""".strip()
 
-    description = llm_complete(prompt, temperature=0.7, max_tokens=100)
+    description = llm_complete(prompt, temperature=0.7, max_tokens=70)
 
     # Referee check
     ok, violations = referee_check_description(
@@ -564,17 +566,19 @@ FORBIDDEN WORDS: {forbidden_str}
 
 Rules:
 1. Start directly with the description itself. Do not add any intro sentence or preamble.
-2. Write 3-4 simple sentences (~50 words total)
-3. DO NOT use the word "{secret_word}" or any part of it
-4. DO NOT use direct synonyms
-5. Give helpful clues but don't make it too obvious
-6. Use simple vocabulary (B1 English level)
-7. Be informative and slightly playful
-8. Do not use any of the forbidden words listed above
+2. Write a short description using 1-2 brief sentences only.
+3. Keep it concise, around 15-25 words total.
+4. Prefer fewer, more descriptive words instead of long sentences.
+5. DO NOT use the word "{secret_word}" or any part of it.
+6. DO NOT use direct synonyms.
+7. Give helpful clues but do not make it too obvious.
+8. Use simple vocabulary (B1 English level).
+9. Be informative and slightly playful.
+10. Do not use any of the forbidden words listed above.
 
 Generate the description now:""".strip()
 
-        description = llm_complete(prompt, temperature=0.7, max_tokens=100)
+        description = llm_complete(prompt, temperature=0.7, max_tokens=70)
 
         if not description:
             logger.error(f"llm_complete returned empty for generate-description, round {round_id}")

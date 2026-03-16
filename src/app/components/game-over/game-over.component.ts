@@ -13,6 +13,8 @@ export class GameOverComponent implements OnInit {
   reason: string | null = null;
   roundNumber: number | null = null;
   resolvedWinner: "user" | "ai" | "tie" = "tie";
+  userTime: number | null = null;
+  aiTime: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,6 +27,8 @@ export class GameOverComponent implements OnInit {
   ngOnInit(): void {
     this.reason = this.route.snapshot.queryParamMap.get("reason");
     this.roundNumber = Number(this.route.snapshot.queryParamMap.get("roundNumber"));
+    this.userTime = Number(this.route.snapshot.queryParamMap.get("userTime"));
+    this.aiTime = Number(this.route.snapshot.queryParamMap.get("aiTime"));
 
     localStorage.removeItem("current_round_id");
     localStorage.removeItem("current_game_id");
@@ -38,8 +42,12 @@ export class GameOverComponent implements OnInit {
     // ── Determine winner ──
     // user-timeout → ai wins (user ran out of time)
     // ai-timeout   → user wins (ai ran out of time)
-    const userTimeLeft = this.gameService.userGuessTimeLeft;
-    const aiTimeLeft = this.gameService.aiGuessTimeLeft;
+    const userTimeLeft = (this.userTime != null && !isNaN(this.userTime))
+      ? this.userTime
+      : this.gameService.userGuessTimeLeft;
+    const aiTimeLeft = (this.aiTime != null && !isNaN(this.aiTime))
+      ? this.aiTime
+      : this.gameService.aiGuessTimeLeft;
 
     let winner: "user" | "ai" | "tie";
     if (this.reason === "user-timeout") {
@@ -57,15 +65,6 @@ export class GameOverComponent implements OnInit {
       }
     }
     this.resolvedWinner = winner;
-
-    // ✅ FIX: Call endGame (not endRound) so the Games table is updated
-    // with outcome, winner, user_final_time, ai_final_time
-    this.gameService
-      .endGame("timeout", userTimeLeft, aiTimeLeft, winner)
-      .subscribe({
-        next: () => {},
-        error: (e) => console.warn("end-game failed:", e),
-      });
 
     this.loggingService.logEvent("gameOver", {
       reason: this.reason,

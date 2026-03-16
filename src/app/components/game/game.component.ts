@@ -172,6 +172,8 @@ export class GameComponent {
           queryParams: {
             reason: "user-timeout",
             roundNumber: this.roundNumber,
+            userTime: userTimeLeft,
+            aiTime: aiTimeLeft,
           },
         });
         return;
@@ -196,7 +198,12 @@ export class GameComponent {
           });
 
         this.router.navigate(["/game-over"], {
-          queryParams: { reason: "ai-timeout", roundNumber: this.roundNumber },
+          queryParams: {
+            reason: "ai-timeout",
+            roundNumber: this.roundNumber,
+            userTime: userTimeLeft,
+            aiTime: aiTimeLeft,
+          },
         });
         return;
       }
@@ -224,7 +231,12 @@ export class GameComponent {
       });
 
     this.router.navigate(["/game-over"], {
-      queryParams: { reason: "timeout", roundNumber: this.roundNumber },
+      queryParams: {
+        reason: "timeout",
+        roundNumber: this.roundNumber,
+        userTime: userTimeLeft,
+        aiTime: aiTimeLeft,
+      },
     });
   }
 

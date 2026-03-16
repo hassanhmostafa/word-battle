@@ -1032,6 +1032,8 @@ def analytics_data():
             FROM Rounds r
             JOIN Actions a ON a.round_id = r.round_id
             WHERE r.game_mode = 'user_guesses'
+              AND r.ended_at IS NOT NULL
+              AND r.outcome IN ('win', 'loss', 'timeout', 'quit')
               AND a.actor = 'user'
               AND a.action_type = 'guess'
               AND a.duration_ms IS NOT NULL
@@ -1047,6 +1049,8 @@ def analytics_data():
             FROM Rounds r
             JOIN Actions a ON a.round_id = r.round_id
             WHERE r.game_mode = 'user_guesses'
+              AND r.ended_at IS NOT NULL
+              AND r.outcome IN ('win', 'loss', 'timeout', 'quit')
               AND a.actor = 'user'
               AND a.action_type = 'guess'
               AND a.duration_ms IS NOT NULL
@@ -1061,6 +1065,8 @@ def analytics_data():
             FROM Rounds r
             JOIN Actions a ON a.round_id = r.round_id
             WHERE r.game_mode = 'ai_guesses'
+              AND r.ended_at IS NOT NULL
+              AND r.outcome IN ('win', 'loss', 'timeout', 'quit')
               AND a.actor = 'ai'
               AND a.action_type = 'guess'
               AND a.duration_ms IS NOT NULL
@@ -1076,6 +1082,8 @@ def analytics_data():
             FROM Rounds r
             JOIN Actions a ON a.round_id = r.round_id
             WHERE r.game_mode = 'ai_guesses'
+              AND r.ended_at IS NOT NULL
+              AND r.outcome IN ('win', 'loss', 'timeout', 'quit')
               AND a.actor = 'ai'
               AND a.action_type = 'guess'
               AND a.duration_ms IS NOT NULL
@@ -1107,18 +1115,30 @@ def analytics_data():
 
     ai_correct = db.execute("""
         SELECT COUNT(*) FROM Rounds
-        WHERE game_mode = 'ai_guesses' AND outcome = 'win' AND ended_at IS NOT NULL
+        WHERE game_mode = 'ai_guesses'
+          AND outcome = 'win'
+          AND ended_at IS NOT NULL
+          AND outcome IN ('win', 'loss', 'timeout', 'quit')
     """).fetchone()[0]
     ai_rounds_total = db.execute("""
-        SELECT COUNT(*) FROM Rounds WHERE game_mode = 'ai_guesses' AND ended_at IS NOT NULL
+        SELECT COUNT(*) FROM Rounds
+        WHERE game_mode = 'ai_guesses'
+          AND ended_at IS NOT NULL
+          AND outcome IN ('win', 'loss', 'timeout', 'quit')
     """).fetchone()[0]
 
     user_correct = db.execute("""
         SELECT COUNT(*) FROM Rounds
-        WHERE game_mode = 'user_guesses' AND outcome = 'win' AND ended_at IS NOT NULL
+        WHERE game_mode = 'user_guesses'
+          AND outcome = 'win'
+          AND ended_at IS NOT NULL
+          AND outcome IN ('win', 'loss', 'timeout', 'quit')
     """).fetchone()[0]
     user_rounds_total = db.execute("""
-        SELECT COUNT(*) FROM Rounds WHERE game_mode = 'user_guesses' AND ended_at IS NOT NULL
+        SELECT COUNT(*) FROM Rounds
+        WHERE game_mode = 'user_guesses'
+          AND ended_at IS NOT NULL
+          AND outcome IN ('win', 'loss', 'timeout', 'quit')
     """).fetchone()[0]
 
     per_user = db.execute("""

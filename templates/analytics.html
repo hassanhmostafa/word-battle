@@ -182,7 +182,7 @@
           <canvas id="chartViolations"></canvas>
         </div>
         <div class="chart-box">
-          <h3>Average Thinking Time (seconds)</h3>
+          <h3>Average Thinking Time Per Turn(seconds)</h3>
           <canvas id="chartDuration"></canvas>
         </div>
         <div class="chart-box">
@@ -318,7 +318,7 @@
           );
         }
 
-        // Average Thinking Time
+        // Average Thinking Time Per Turn
         const turnDurationData = (d.turn_duration_comparison || []).filter(item => item.avg_sec !== null);
         if (turnDurationData.length) {
           makeChart('chartDuration', 'bar',

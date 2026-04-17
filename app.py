@@ -468,7 +468,7 @@ Return ONLY this JSON (no extra text):
 - "confidence": float from 0.0 (very unsure) to 1.0 (completely certain)
 - "reasoning": one sentence max""".strip()
 
-    raw = llm_complete_fastest(prompt, temperature=0.3, max_tokens=150)
+    raw = llm_complete_fast(prompt, temperature=0.3, max_tokens=150)
     
     from utils import _extract_json
     parsed = _extract_json(raw)
